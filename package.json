@@ -1,0 +1,21 @@
+{
+  "name": "sensei-ai-prototype",
+  "version": "1.0.0",
+  "description": "先生向けAIアシスタント プロトタイプ - まなびポケット連携デモ",
+  "scripts": {
+    "start": "npx serve public",
+    "dev": "npx serve public -l 3000"
+  },
+  "keywords": [
+    "education",
+    "ai",
+    "teacher",
+    "assistant",
+    "prototype"
+  ],
+  "author": "",
+  "license": "MIT",
+  "devDependencies": {
+    "serve": "^14.2.0"
+  }
+}
