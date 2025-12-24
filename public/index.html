@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>先生AI - プロトタイプ</title>
+    <title>まなびポケット UIモック</title>
     <style>
         * {
             margin: 0;
@@ -11,2732 +11,299 @@
             box-sizing: border-box;
         }
         
-        :root {
-            --primary: #0066CC;
-            --primary-dark: #0052A3;
-            --success: #10B981;
-            --bg-primary: #FFFFFF;
-            --bg-secondary: #F8F9FA;
-            --bg-chat: #F0F4F8;
-            --text-primary: #1F2937;
-            --text-secondary: #6B7280;
-            --border: #E5E7EB;
-            --shadow: 0 1px 3px rgba(0,0,0,0.1);
-            --shadow-lg: 0 10px 25px rgba(0,0,0,0.1);
-        }
-        
         body {
-            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Noto Sans JP", sans-serif;
-            background: var(--bg-secondary);
-            height: 100vh;
-            display: flex;
-            overflow: hidden;
-        }
-        
-        /* サイドバー */
-        .sidebar {
-            width: 260px;
-            background: var(--bg-primary);
-            border-right: 1px solid var(--border);
-            display: flex;
-            flex-direction: column;
-            transition: all 0.3s;
-            height: 100vh;
-            overflow: hidden;
-        }
-        
-        .sidebar-header {
-            padding: 16px;
-            border-bottom: 1px solid var(--border);
-        }
-        
-        .logo {
-            display: flex;
-            align-items: center;
-            gap: 8px;
-            font-size: 18px;
-            font-weight: 700;
-            color: var(--primary);
-        }
-        
-        .logo-icon {
-            width: 32px;
-            height: 32px;
-            background: linear-gradient(135deg, var(--primary), var(--primary-dark));
-            border-radius: 8px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            color: white;
-            font-size: 18px;
-        }
-        
-        .new-chat-btn {
-            width: 100%;
-            padding: 12px;
-            background: var(--primary);
-            color: white;
-            border: none;
-            border-radius: 8px;
-            font-size: 14px;
-            font-weight: 600;
-            cursor: pointer;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 6px;
-            margin-top: 12px;
-            transition: all 0.2s;
-        }
-        
-        .new-chat-btn:hover {
-            background: var(--primary-dark);
-            transform: translateY(-1px);
-        }
-        
-        /* 時間割セクション */
-        .schedule-section-wrapper {
-            position: relative;
-            border-bottom: 1px solid var(--border);
-        }
-        
-        .schedule-section {
-            padding: 16px;
-            transition: background-color 0.3s;
-            overflow-y: auto;
-            flex-shrink: 0;
-            min-height: 150px;
-            max-height: 300px;
-        }
-        
-        .resize-handle {
-            height: 4px;
-            background: transparent;
-            cursor: ns-resize;
-            position: relative;
-            transition: background 0.2s;
-        }
-        
-        .resize-handle:hover {
-            background: var(--primary);
-        }
-        
-        .resize-handle::after {
-            content: '';
-            position: absolute;
-            left: 50%;
-            top: 50%;
-            transform: translate(-50%, -50%);
-            width: 40px;
-            height: 4px;
-            background: var(--border);
-            border-radius: 2px;
-        }
-        
-        .resize-handle:hover::after {
-            background: var(--primary);
-        }
-        
-        .section-title {
-            font-size: 12px;
-            font-weight: 600;
-            color: var(--text-secondary);
-            text-transform: uppercase;
-            letter-spacing: 0.5px;
-            margin-bottom: 12px;
-        }
-        
-        .schedule-date-group {
-            margin-bottom: 16px;
-        }
-        
-        .schedule-date-group:last-child {
-            margin-bottom: 0;
-        }
-        
-        .schedule-date-header {
-            font-size: 12px;
-            font-weight: 600;
-            color: var(--text-primary);
-            padding: 8px 12px;
-            background: var(--bg-secondary);
-            border-radius: 6px;
-            margin-bottom: 8px;
-        }
-        
-        .schedule-list {
-            display: flex;
-            flex-direction: column;
-            gap: 4px;
-            padding-left: 4px;
-        }
-        
-        .schedule-item {
-            padding: 10px 12px;
-            background: var(--bg-secondary);
-            border-radius: 6px;
-            cursor: pointer;
-            transition: all 0.2s;
-            border: 2px solid transparent;
-            position: relative;
-        }
-        
-        .schedule-item::after {
-            content: '→';
-            position: absolute;
-            right: 12px;
-            top: 50%;
-            transform: translateY(-50%);
-            opacity: 0;
-            transition: all 0.2s;
-            color: var(--primary);
-            font-weight: bold;
-        }
-        
-        .schedule-item:hover {
-            background: #E8F2FF;
-            border-color: var(--primary);
-            padding-right: 32px;
-        }
-        
-        .schedule-item:hover::after {
-            opacity: 1;
-        }
-        
-        .schedule-item.active {
-            background: #E8F2FF;
-            border-color: var(--primary);
-        }
-        
-        .schedule-time {
-            font-size: 13px;
-            font-weight: 600;
-            color: var(--primary);
-            margin-bottom: 4px;
-        }
-        
-        .schedule-class {
-            font-size: 13px;
-            font-weight: 600;
-            color: var(--text-primary);
-        }
-        
-        .schedule-subject {
-            font-size: 12px;
-            color: var(--text-secondary);
-        }
-        
-        /* チャット履歴 */
-        .chat-history-wrapper {
-            display: flex;
-            flex-direction: column;
-            flex: 1;
-            overflow: hidden;
-            position: relative;
-        }
-        
-        .chat-history {
-            flex: 1;
-            overflow-y: auto;
-            padding: 16px;
-            min-height: 200px;
-        }
-        
-        /* プロジェクト外のスタンドアロンチャット */
-        .standalone-chats {
-            margin-bottom: 16px;
-            padding-bottom: 16px;
-            border-bottom: 1px solid var(--border);
-        }
-        
-        .history-item {
-            padding: 10px 12px;
-            border-radius: 6px;
-            cursor: pointer;
-            margin-bottom: 4px;
-            transition: all 0.2s;
-            border: 1px solid transparent;
-        }
-        
-        .history-item:hover {
-            background: var(--bg-secondary);
-            border-color: var(--border);
-        }
-        
-        .history-title {
-            font-size: 13px;
-            font-weight: 500;
-            color: var(--text-primary);
-            margin-bottom: 2px;
-            overflow: hidden;
-            text-overflow: ellipsis;
-            white-space: nowrap;
-        }
-        
-        .history-date {
-            font-size: 11px;
-            color: var(--text-secondary);
-        }
-        
-        /* プロジェクトグループ */
-        .project-group {
-            margin-bottom: 12px;
-        }
-        
-        .project-header {
-            display: flex;
-            align-items: center;
-            gap: 8px;
-            padding: 8px 12px;
-            cursor: pointer;
-            border-radius: 6px;
-            transition: all 0.2s;
-            font-weight: 600;
-            font-size: 13px;
-            color: var(--text-primary);
-        }
-        
-        .project-header:hover {
-            background: var(--bg-secondary);
-        }
-        
-        .project-icon {
-            font-size: 16px;
-        }
-        
-        .project-name {
-            flex: 1;
-        }
-        
-        .chevron {
-            font-size: 10px;
-            color: var(--text-secondary);
-            transition: transform 0.2s;
-        }
-        
-        .project-header.collapsed .chevron {
-            transform: rotate(-90deg);
-        }
-        
-        .project-threads {
-            padding-left: 8px;
-            margin-top: 4px;
-            border-left: 2px solid var(--border);
-            margin-left: 20px;
-        }
-        
-        .project-threads.hidden {
-            display: none;
-        }
-        
-        /* プロジェクトアクションボタン */
-        .project-action-btn {
-            padding: 10px 12px;
-            background: transparent;
-            color: var(--text-primary);
-            border-radius: 6px;
-            cursor: pointer;
-            margin-bottom: 4px;
-            transition: all 0.2s;
-            font-size: 13px;
-            font-weight: 600;
-            text-align: left;
-            border: 1px solid transparent;
-        }
-        
-        .project-action-btn:hover {
-            background: var(--bg-secondary);
-            border-color: var(--border);
-        }
-        
-        .project-action-btn.secondary {
-            margin-bottom: 0;
-            margin-top: 4px;
-            font-weight: 500;
-            color: var(--text-secondary);
-            font-size: 11px;
-            text-align: right;
-            padding: 6px 12px;
-        }
-        
-        .project-action-btn.secondary:hover {
-            color: var(--text-primary);
-            background: transparent;
-        }
-        
-        /* メインエリア */
-        .main-area {
-            flex: 1;
-            display: flex;
-            flex-direction: column;
-            background: var(--bg-primary);
-        }
-        
-        /* ヘッダー */
-        .chat-header {
-            padding: 16px 24px;
-            border-bottom: 1px solid var(--border);
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-        }
-        
-        .context-badge {
-            display: flex;
-            gap: 8px;
-            align-items: center;
-        }
-        
-        .badge {
-            padding: 4px 12px;
-            background: var(--bg-secondary);
-            border-radius: 100px;
-            font-size: 12px;
-            font-weight: 500;
-            color: var(--text-secondary);
-            border: 1px solid var(--border);
-            display: inline-flex;
-            align-items: center;
-            gap: 4px;
-        }
-        
-        .badge.project-badge {
-            background: var(--primary);
-            color: white;
-            border-color: var(--primary);
-            font-weight: 600;
-        }
-        
-        .badge.context-badge-item {
-            background: var(--bg-secondary);
-            color: var(--text-secondary);
-            border-color: var(--border);
-        }
-        
-        .badge-icon {
-            font-size: 13px;
-            line-height: 1;
-        }
-        
-        .data-indicator {
-            display: flex;
-            gap: 4px;
-            align-items: center;
-        }
-        
-        .data-indicator:hover {
-            background: var(--bg-secondary) !important;
-            border-color: var(--primary) !important;
-        }
-        
-        .data-dot {
-            width: 8px;
-            height: 8px;
-            border-radius: 50%;
-            background: var(--success);
-        }
-        
-        .data-label {
-            font-size: 12px;
-            color: var(--text-secondary);
-        }
-        
-        /* チャットエリア */
-        .chat-container {
-            flex: 1;
-            overflow-y: auto;
-            padding: 24px;
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Hiragino Sans', 'Hiragino Kaku Gothic ProN', 'Yu Gothic', sans-serif;
+            background: linear-gradient(135deg, #f0f4ff 0%, #e8f4f8 100%);
+            min-height: 100vh;
             display: flex;
             flex-direction: column;
         }
         
-        .welcome-screen {
-            flex: 1;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            max-width: 600px;
+        .container {
+            max-width: 800px;
             margin: 0 auto;
+            padding: 60px 20px;
+            flex: 1;
+        }
+        
+        .header {
             text-align: center;
+            margin-bottom: 48px;
         }
         
-        .welcome-icon {
-            font-size: 48px;
-            margin-bottom: 16px;
-        }
-        
-        .welcome-title {
-            font-size: 24px;
-            font-weight: 700;
-            color: var(--text-primary);
-            margin-bottom: 8px;
-        }
-        
-        .welcome-subtitle {
-            font-size: 14px;
-            color: var(--text-secondary);
-            margin-bottom: 32px;
-        }
-        
-        .welcome-hint {
-            font-size: 13px;
-            color: var(--text-secondary);
-            background: var(--bg-secondary);
-            padding: 12px 16px;
-            border-radius: 8px;
-            border-left: 3px solid var(--primary);
-            margin-top: 16px;
-            text-align: left;
-        }
-        
-        .preset-info {
-            display: inline-flex;
-            align-items: center;
-            gap: 8px;
-            margin-top: 16px;
-            padding: 8px 14px;
-            background: #F0F9FF;
-            border: 1px solid #BFDBFE;
-            border-radius: 20px;
-        }
-        
-        .preset-label {
-            font-size: 11px;
-            font-weight: 600;
-            color: var(--primary);
-        }
-        
-        .preset-tags {
+        .header-title {
             display: flex;
-            flex-wrap: wrap;
-            gap: 4px;
-        }
-        
-        .preset-tag {
-            padding: 2px 8px;
-            background: white;
-            border-radius: 10px;
-            font-size: 11px;
-            color: var(--primary);
-            font-weight: 500;
-        }
-        
-        .preset-tag.dynamic {
-            background: #E0F2FE;
-        }
-        
-        .suggestion-grid {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
+            align-items: center;
+            justify-content: center;
             gap: 12px;
-            width: 100%;
+            margin-bottom: 12px;
         }
         
-        .suggestion-card {
-            padding: 16px;
-            background: var(--bg-secondary);
-            border-radius: 12px;
-            text-align: left;
-            cursor: pointer;
-            transition: all 0.2s;
-            border: 2px solid transparent;
+        .header-icon {
+            width: 48px;
+            height: 48px;
+            background: linear-gradient(135deg, #10B981 0%, #3B82F6 50%, #EF4444 100%);
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
         }
         
-        .suggestion-card:hover {
-            background: #E8F2FF;
-            border-color: var(--primary);
+        .header-icon svg {
+            width: 28px;
+            height: 28px;
+            fill: white;
+        }
+        
+        h1 {
+            font-size: 32px;
+            font-weight: 700;
+            color: #1F2937;
+        }
+        
+        .header-subtitle {
+            font-size: 16px;
+            color: #6B7280;
+        }
+        
+        .card-list {
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+        
+        .card {
+            background: white;
+            border-radius: 16px;
+            padding: 28px 32px;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+            transition: box-shadow 0.2s, transform 0.2s;
+        }
+        
+        .card:hover {
+            box-shadow: 0 8px 24px rgba(0, 0, 0, 0.12);
             transform: translateY(-2px);
         }
         
-        .suggestion-icon {
-            font-size: 20px;
-            margin-bottom: 8px;
-        }
-        
-        .suggestion-text {
-            font-size: 13px;
-            font-weight: 500;
-            color: var(--text-primary);
-        }
-        
-        /* メッセージ */
-        .message {
-            margin-bottom: 24px;
+        .card-content {
             display: flex;
-            gap: 12px;
-            animation: fadeIn 0.3s;
+            align-items: flex-start;
+            gap: 20px;
         }
         
-        @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(10px); }
-            to { opacity: 1; transform: translateY(0); }
-        }
-        
-        .message-avatar {
-            width: 36px;
-            height: 36px;
-            border-radius: 50%;
+        .card-icon {
+            width: 56px;
+            height: 56px;
+            background: #EBF5FF;
+            border-radius: 12px;
             display: flex;
             align-items: center;
             justify-content: center;
-            font-size: 18px;
             flex-shrink: 0;
         }
         
-        .message.user .message-avatar {
-            background: linear-gradient(135deg, #10B981, #059669);
+        .card-icon svg {
+            width: 28px;
+            height: 28px;
+            stroke: #3B82F6;
+            fill: none;
+            stroke-width: 2;
         }
         
-        .message.assistant .message-avatar {
-            background: linear-gradient(135deg, var(--primary), var(--primary-dark));
+        .card-icon.green {
+            background: #ECFDF5;
         }
         
-        .message-content {
+        .card-icon.green svg {
+            stroke: #10B981;
+        }
+        
+        .card-icon.purple {
+            background: #F3E8FF;
+        }
+        
+        .card-icon.purple svg {
+            stroke: #8B5CF6;
+        }
+        
+        .card-icon.orange {
+            background: #FFF7ED;
+        }
+        
+        .card-icon.orange svg {
+            stroke: #F97316;
+        }
+        
+        .card-body {
             flex: 1;
         }
         
-        .message-text {
-            background: var(--bg-chat);
-            padding: 14px 16px;
-            border-radius: 12px;
+        .card-title {
+            font-size: 18px;
+            font-weight: 600;
+            color: #1F2937;
+            margin-bottom: 8px;
+        }
+        
+        .card-description {
             font-size: 14px;
+            color: #6B7280;
             line-height: 1.6;
-            color: var(--text-primary);
+            margin-bottom: 16px;
         }
         
-        .message.assistant .message-text {
-            background: white;
-            border: 1px solid var(--border);
-        }
-        
-        .message-meta {
-            display: flex;
-            gap: 12px;
-            margin-top: 8px;
-            font-size: 12px;
-            color: var(--text-secondary);
-        }
-        
-        .source-badge {
+        .card-button {
             display: inline-flex;
             align-items: center;
-            gap: 4px;
+            gap: 6px;
+            padding: 10px 20px;
+            background: #3B82F6;
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-size: 14px;
+            font-weight: 600;
+            cursor: pointer;
+            text-decoration: none;
+            transition: background 0.2s;
+        }
+        
+        .card-button:hover {
+            background: #2563EB;
+        }
+        
+        .card-button svg {
+            width: 16px;
+            height: 16px;
+            stroke: currentColor;
+            fill: none;
+            stroke-width: 2;
+        }
+        
+        .card.disabled {
+            opacity: 0.6;
+        }
+        
+        .card.disabled .card-button {
+            background: #9CA3AF;
+            cursor: not-allowed;
+        }
+        
+        .card.disabled .card-button:hover {
+            background: #9CA3AF;
+        }
+        
+        .badge {
+            display: inline-block;
             padding: 2px 8px;
             background: #FEF3C7;
             color: #92400E;
-            border-radius: 4px;
             font-size: 11px;
-            font-weight: 500;
-        }
-        
-        /* ナレッジ共有カード */
-        .knowledge-card {
-            background: white;
-            border: 2px solid var(--border);
-            border-radius: 12px;
-            padding: 16px;
-            margin-top: 12px;
-            transition: all 0.2s;
-        }
-        
-        .knowledge-card:hover {
-            border-color: var(--primary);
-            box-shadow: var(--shadow-lg);
-        }
-        
-        .knowledge-card-title {
-            font-size: 14px;
             font-weight: 600;
-            color: var(--text-primary);
-            margin-bottom: 8px;
-            display: flex;
-            align-items: center;
-            gap: 6px;
-        }
-        
-        .knowledge-card-meta {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 8px;
-            margin-bottom: 12px;
-            font-size: 12px;
-            color: var(--text-secondary);
-        }
-        
-        .knowledge-card-meta-item {
-            display: flex;
-            align-items: center;
-            gap: 4px;
-        }
-        
-        .knowledge-card-btn {
-            display: inline-flex;
-            align-items: center;
-            gap: 6px;
-            padding: 8px 16px;
-            background: var(--primary);
-            color: white;
-            border: none;
-            border-radius: 8px;
-            font-size: 13px;
-            font-weight: 600;
-            cursor: pointer;
-            transition: all 0.2s;
-            text-decoration: none;
-        }
-        
-        .knowledge-card-btn:hover {
-            background: var(--primary-dark);
-            transform: translateY(-1px);
-        }
-        
-        /* SharePointモーダル */
-        .sharepoint-modal {
-            position: fixed;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            background: rgba(0, 0, 0, 0.7);
-            z-index: 10000;
-            display: none;
-            align-items: center;
-            justify-content: center;
-            padding: 24px;
-            animation: fadeIn 0.3s;
-        }
-        
-        .sharepoint-modal.active {
-            display: flex;
-        }
-        
-        .sharepoint-content {
-            background: white;
-            border-radius: 12px;
-            max-width: 1200px;
-            width: 100%;
-            max-height: 90vh;
-            overflow-y: auto;
-            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
-            animation: slideUp 0.3s;
-        }
-        
-        @keyframes slideUp {
-            from {
-                opacity: 0;
-                transform: translateY(30px);
-            }
-            to {
-                opacity: 1;
-                transform: translateY(0);
-            }
-        }
-        
-        .sharepoint-header {
-            padding: 20px 24px;
-            border-bottom: 1px solid var(--border);
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            background: #F8F9FA;
-        }
-        
-        .sharepoint-title {
-            display: flex;
-            align-items: center;
-            gap: 12px;
-        }
-        
-        .sharepoint-icon {
-            width: 40px;
-            height: 40px;
-            background: linear-gradient(135deg, #0078D4, #005A9E);
-            border-radius: 8px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 20px;
-            color: white;
-        }
-        
-        .sharepoint-title-text h2 {
-            font-size: 18px;
-            font-weight: 600;
-            color: var(--text-primary);
-            margin: 0;
-        }
-        
-        .sharepoint-breadcrumb {
-            font-size: 12px;
-            color: var(--text-secondary);
-            margin-top: 4px;
-        }
-        
-        .sharepoint-close {
-            width: 36px;
-            height: 36px;
-            border: none;
-            background: transparent;
-            color: var(--text-secondary);
-            font-size: 24px;
-            cursor: pointer;
-            border-radius: 6px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            transition: all 0.2s;
-        }
-        
-        .sharepoint-close:hover {
-            background: var(--bg-secondary);
-            color: var(--text-primary);
-        }
-        
-        .sharepoint-body {
-            padding: 24px;
-        }
-        
-        .sharepoint-meta {
-            display: flex;
-            gap: 24px;
-            padding: 16px 0;
-            border-bottom: 1px solid var(--border);
-            margin-bottom: 24px;
-            font-size: 13px;
-        }
-        
-        .sharepoint-meta-item {
-            display: flex;
-            flex-direction: column;
-            gap: 4px;
-        }
-        
-        .sharepoint-meta-label {
-            color: var(--text-secondary);
-            font-size: 11px;
-            text-transform: uppercase;
-            letter-spacing: 0.5px;
-        }
-        
-        .sharepoint-meta-value {
-            color: var(--text-primary);
-            font-weight: 500;
-        }
-        
-        .sharepoint-section {
-            margin-bottom: 32px;
-        }
-        
-        .sharepoint-section-title {
-            font-size: 16px;
-            font-weight: 600;
-            color: var(--text-primary);
-            margin-bottom: 16px;
-            display: flex;
-            align-items: center;
-            gap: 8px;
-        }
-        
-        .video-container {
-            position: relative;
-            padding-bottom: 56.25%;
-            height: 0;
-            overflow: hidden;
-            border-radius: 8px;
-            background: #000;
-        }
-        
-        .video-container iframe {
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-        }
-        
-        .lesson-plan {
-            background: var(--bg-secondary);
-            border-radius: 8px;
-            padding: 20px;
-            line-height: 1.8;
-        }
-        
-        .lesson-plan h3 {
-            font-size: 15px;
-            font-weight: 600;
-            color: var(--text-primary);
-            margin: 20px 0 12px 0;
-        }
-        
-        .lesson-plan h3:first-child {
-            margin-top: 0;
-        }
-        
-        .lesson-plan ul {
-            margin: 8px 0;
-            padding-left: 24px;
-        }
-        
-        .lesson-plan li {
-            margin: 6px 0;
-            color: var(--text-primary);
-        }
-        
-        .download-btn {
-            display: inline-flex;
-            align-items: center;
-            gap: 8px;
-            padding: 10px 20px;
-            background: #0078D4;
-            color: white;
-            border: none;
-            border-radius: 6px;
-            font-size: 14px;
-            font-weight: 600;
-            cursor: pointer;
-            transition: all 0.2s;
-            text-decoration: none;
-            margin-top: 16px;
-        }
-        
-        .download-btn:hover {
-            background: #005A9E;
-            transform: translateY(-1px);
-        }
-        
-        /* 入力エリア */
-        .input-area {
-            padding: 16px 24px;
-            border-top: 1px solid var(--border);
-            background: var(--bg-primary);
-        }
-        
-        .input-container {
-            max-width: 800px;
-            margin: 0 auto;
-            position: relative;
-        }
-        
-        .quick-prompts {
-            display: flex;
-            gap: 8px;
-            margin-bottom: 12px;
-            overflow-x: auto;
-            padding-bottom: 4px;
-        }
-        
-        .quick-prompt {
-            padding: 6px 12px;
-            background: var(--bg-secondary);
-            border: 1px solid var(--border);
-            border-radius: 20px;
-            font-size: 12px;
-            color: var(--text-secondary);
-            cursor: pointer;
-            white-space: nowrap;
-            transition: all 0.2s;
-        }
-        
-        .quick-prompt:hover {
-            background: #E8F2FF;
-            color: var(--primary);
-            border-color: var(--primary);
-        }
-        
-        .input-wrapper {
-            display: flex;
-            gap: 8px;
-            align-items: flex-end;
-        }
-        
-        .attach-btn {
-            width: 40px;
-            height: 40px;
-            background: white;
-            color: var(--text-secondary);
-            border: 2px solid var(--border);
-            border-radius: 10px;
-            cursor: pointer;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 18px;
-            transition: all 0.2s;
-            flex-shrink: 0;
-        }
-        
-        .attach-btn:hover {
-            background: var(--bg-secondary);
-            border-color: var(--primary);
-            color: var(--primary);
-        }
-        
-        .attached-files {
-            display: flex;
-            gap: 8px;
-            margin-bottom: 8px;
-            flex-wrap: wrap;
-        }
-        
-        .attached-file {
-            display: flex;
-            align-items: center;
-            gap: 6px;
-            padding: 6px 10px;
-            background: var(--bg-secondary);
-            border: 1px solid var(--border);
-            border-radius: 8px;
-            font-size: 12px;
-            color: var(--text-secondary);
-        }
-        
-        .attached-file-name {
-            max-width: 150px;
-            overflow: hidden;
-            text-overflow: ellipsis;
-            white-space: nowrap;
-        }
-        
-        .remove-file {
-            cursor: pointer;
-            color: var(--text-secondary);
-            font-size: 14px;
-            line-height: 1;
-        }
-        
-        .remove-file:hover {
-            color: var(--danger);
-        }
-        
-        .input-box {
-            flex: 1;
-            display: flex;
-            align-items: flex-end;
-            background: white;
-            border: 2px solid var(--border);
-            border-radius: 12px;
-            padding: 12px 16px;
-            transition: all 0.2s;
-        }
-        
-        .input-box:focus-within {
-            border-color: var(--primary);
-            box-shadow: 0 0 0 3px rgba(0, 102, 204, 0.1);
-        }
-        
-        #messageInput {
-            flex: 1;
-            border: none;
-            outline: none;
-            font-size: 14px;
-            font-family: inherit;
-            resize: none;
-            max-height: 120px;
-            line-height: 1.5;
-        }
-        
-        .send-btn {
-            width: 40px;
-            height: 40px;
-            background: var(--primary);
-            color: white;
-            border: none;
-            border-radius: 10px;
-            cursor: pointer;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 18px;
-            transition: all 0.2s;
-            flex-shrink: 0;
-        }
-        
-        .send-btn:hover {
-            background: var(--primary-dark);
-            transform: translateY(-1px);
-        }
-        
-        .send-btn:disabled {
-            background: var(--border);
-            cursor: not-allowed;
-            transform: none;
-        }
-        
-        /* ローディング */
-        .typing-indicator {
-            display: flex;
-            gap: 4px;
-            padding: 12px;
-        }
-        
-        .typing-dot {
-            width: 8px;
-            height: 8px;
-            background: var(--text-secondary);
-            border-radius: 50%;
-            animation: typing 1.4s infinite;
-        }
-        
-        .typing-dot:nth-child(2) { animation-delay: 0.2s; }
-        .typing-dot:nth-child(3) { animation-delay: 0.4s; }
-        
-        @keyframes typing {
-            0%, 60%, 100% { transform: translateY(0); opacity: 0.5; }
-            30% { transform: translateY(-10px); opacity: 1; }
-        }
-        
-        /* スナックバー */
-        .snackbar-container {
-            position: fixed;
-            top: 24px;
-            right: 24px;
-            z-index: 10000;
-            display: flex;
-            flex-direction: column;
-            gap: 12px;
-            pointer-events: none;
-        }
-        
-        .snackbar {
-            background: #1F2937;
-            color: white;
-            padding: 16px 24px;
-            border-radius: 12px;
-            box-shadow: 0 10px 40px rgba(0,0,0,0.3);
-            display: flex;
-            align-items: center;
-            gap: 12px;
-            min-width: 300px;
-            max-width: 400px;
-            pointer-events: all;
-            animation: snackbarSlideIn 0.4s cubic-bezier(0.16, 1, 0.3, 1);
-        }
-        
-        .snackbar.closing {
-            animation: snackbarSlideOut 0.3s cubic-bezier(0.5, 0, 0.75, 0);
-        }
-        
-        @keyframes snackbarSlideIn {
-            from {
-                opacity: 0;
-                transform: translateX(400px);
-            }
-            to {
-                opacity: 1;
-                transform: translateX(0);
-            }
-        }
-        
-        @keyframes snackbarSlideOut {
-            from {
-                opacity: 1;
-                transform: translateX(0);
-            }
-            to {
-                opacity: 0;
-                transform: translateX(400px);
-            }
-        }
-        
-        .snackbar-icon {
-            font-size: 20px;
-            flex-shrink: 0;
-        }
-        
-        .snackbar-content {
-            flex: 1;
-            font-size: 14px;
-            line-height: 1.5;
-        }
-        
-        .snackbar-close {
-            background: transparent;
-            border: none;
-            color: rgba(255,255,255,0.7);
-            font-size: 20px;
-            cursor: pointer;
-            padding: 0;
-            width: 24px;
-            height: 24px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
             border-radius: 4px;
-            transition: all 0.2s;
-            flex-shrink: 0;
+            margin-left: 8px;
+            vertical-align: middle;
         }
         
-        .snackbar-close:hover {
-            background: rgba(255,255,255,0.1);
-            color: white;
+        .badge.coming-soon {
+            background: #E5E7EB;
+            color: #6B7280;
         }
         
-        /* レスポンシブ */
-        @media (max-width: 768px) {
-            .sidebar {
-                position: fixed;
-                left: -260px;
-                height: 100%;
-                z-index: 1000;
-            }
-            
-            .sidebar.open {
-                left: 0;
-            }
-            
-            .suggestion-grid {
-                grid-template-columns: 1fr;
-            }
-            
-            .snackbar-container {
-                right: 12px;
-                left: 12px;
-                top: 12px;
-            }
-            
-            .snackbar {
-                min-width: auto;
-                max-width: none;
-            }
+        .footer {
+            text-align: center;
+            padding: 24px;
+            color: #9CA3AF;
+            font-size: 13px;
         }
     </style>
 </head>
 <body>
-    <!-- サイドバー -->
-    <div class="sidebar">
-        <div class="sidebar-header">
-            <div class="logo">
-                <div class="logo-icon">🤖</div>
-                <span>先生AI</span>
-            </div>
-            <button class="new-chat-btn" onclick="newChat()">
-                <span style="font-size: 18px; font-weight: 700;">+</span> 新しいチャット
-            </button>
-        </div>
-        
-        <div class="schedule-section-wrapper">
-            <div class="schedule-section" id="scheduleSection">
-                <div class="section-title">📅 時間割</div>
-                
-                <!-- 今日 -->
-                <div class="schedule-date-group">
-                    <div class="schedule-date-header">今日（10/10 金）</div>
-                    <div class="schedule-list">
-                        <div class="schedule-item" onclick="createScheduleThread('1限', '3年2組', '数学', '二次関数の応用', '08:50 - 09:40')">
-                            <div class="schedule-time">1限</div>
-                            <div class="schedule-class">3年2組 数学</div>
-                            <div class="schedule-subject">二次関数の応用</div>
-                        </div>
-                        <div class="schedule-item" onclick="createScheduleThread('3限', '3年2組', '数学', '二次関数の応用', '10:50 - 11:40')">
-                            <div class="schedule-time">3限</div>
-                            <div class="schedule-class">3年2組 数学</div>
-                            <div class="schedule-subject">二次関数の応用</div>
-                        </div>
-                        <div class="schedule-item" onclick="createScheduleThread('5限', '3年1組', '数学', '二次関数の基礎', '13:30 - 14:20')">
-                            <div class="schedule-time">5限</div>
-                            <div class="schedule-class">3年1組 数学</div>
-                            <div class="schedule-subject">二次関数の基礎</div>
-                        </div>
-                    </div>
+    <div class="container">
+        <header class="header">
+            <div class="header-title">
+                <div class="header-icon">
+                    <svg viewBox="0 0 24 24" fill="currentColor">
+                        <rect x="3" y="3" width="7" height="7" rx="1"/>
+                        <rect x="14" y="3" width="7" height="7" rx="1"/>
+                        <rect x="3" y="14" width="7" height="7" rx="1"/>
+                        <rect x="14" y="14" width="7" height="7" rx="1"/>
+                    </svg>
                 </div>
-                
-                <!-- 明日 -->
-                <div class="schedule-date-group">
-                    <div class="schedule-date-header">明日（10/11 土）</div>
-                    <div class="schedule-list">
-                        <div class="schedule-item" onclick="createScheduleThread('2限', '3年1組', '数学', '二次関数の応用', '09:50 - 10:40')">
-                            <div class="schedule-time">2限</div>
-                            <div class="schedule-class">3年1組 数学</div>
-                            <div class="schedule-subject">二次関数の応用</div>
-                        </div>
-                        <div class="schedule-item" onclick="createScheduleThread('4限', '2年3組', '英語', 'Present Perfect', '11:50 - 12:40')">
-                            <div class="schedule-time">4限</div>
-                            <div class="schedule-class">2年3組 英語</div>
-                            <div class="schedule-subject">Present Perfect</div>
-                        </div>
+                <h1>まなびポケット UIモック</h1>
+            </div>
+            <p class="header-subtitle">各機能のプロトタイプをご確認いただけます</p>
+        </header>
+        
+        <div class="card-list">
+            <!-- ナレッジ共有・校務連携 -->
+            <div class="card">
+                <div class="card-content">
+                    <div class="card-icon">
+                        <svg viewBox="0 0 24 24">
+                            <path d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/>
+                            <path d="M12 3v6a1 1 0 001 1h6"/>
+                        </svg>
+                    </div>
+                    <div class="card-body">
+                        <h2 class="card-title">ナレッジ共有・校務連携<span class="badge">New</span></h2>
+                        <p class="card-description">生徒カルテ・校務システムと連携し、AIが先生の業務をサポート。生徒情報の確認、声かけ例の提案、保護者連絡文の作成などを支援する教師向けダッシュボード。</p>
+                        <a href="./sensei-ai.html" class="card-button">
+                            デモを見る
+                            <svg viewBox="0 0 24 24">
+                                <path d="M5 12h14m-7-7l7 7-7 7"/>
+                            </svg>
+                        </a>
                     </div>
                 </div>
             </div>
-            <div class="resize-handle" id="scheduleResizeHandle"></div>
-        </div>
-        
-        <div class="chat-history-wrapper">
-            <div class="chat-history">
-                <div class="section-title">⭐ ピックアップ</div>
-                
-                <!-- プロジェクト外のチャット -->
-                <div class="standalone-chats">
-                    <div class="history-item" onclick="loadHistory('上田亜季さん')">
-                        <div class="history-title">上田亜季さんの最近の様子</div>
-                        <div class="history-date">今日 12:15</div>
+            
+            <!-- 単元振り返り（児童用）- Coming Soon -->
+            <div class="card disabled">
+                <div class="card-content">
+                    <div class="card-icon green">
+                        <svg viewBox="0 0 24 24">
+                            <path d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253"/>
+                        </svg>
                     </div>
-                    <div class="history-item" onclick="loadHistory('保護者会資料')">
-                        <div class="history-title">保護者会の資料作成</div>
-                        <div class="history-date">昨日 16:45</div>
-                    </div>
-                </div>
-                
-                <!-- プロジェクト: 3年2組 数学 -->
-                <div class="project-group">
-                    <div class="project-header collapsed" onclick="toggleProject(this)">
-                        <span class="project-icon">📁</span>
-                        <span class="project-name">3年2組 数学</span>
-                        <span class="chevron">▼</span>
-                    </div>
-                    <div class="project-threads hidden">
-                        <div class="project-action-btn" onclick="startProjectThread('3年2組', '数学')">
-                            ➕ 新規スレッド
-                        </div>
-                        <div class="history-item" onclick="loadHistory('導入のネタ')">
-                            <div class="history-title">3限: 導入のネタを考えて</div>
-                            <div class="history-date">今日 08:30</div>
-                        </div>
-                        <div class="history-item" onclick="loadHistory('協働学習')">
-                            <div class="history-title">1限: 協働学習の設計</div>
-                            <div class="history-date">今日 07:45</div>
-                        </div>
-                        <div class="history-item" onclick="loadHistory('振り返り分析')">
-                            <div class="history-title">前回授業の振り返り分析</div>
-                            <div class="history-date">昨日 15:20</div>
-                        </div>
-                        <div class="project-action-btn secondary" onclick="viewAllHistory('3年2組', '数学')">
-                            📂 履歴を全部見る
-                        </div>
+                    <div class="card-body">
+                        <h2 class="card-title">単元振り返り（児童用）<span class="badge coming-soon">準備中</span></h2>
+                        <p class="card-description">理科「磁石の実験」の単元振り返りシート。児童が学習を振り返り、AIコメントを受け取る機能のデモ。</p>
+                        <span class="card-button">
+                            デモを見る
+                            <svg viewBox="0 0 24 24">
+                                <path d="M5 12h14m-7-7l7 7-7 7"/>
+                            </svg>
+                        </span>
                     </div>
                 </div>
-                
-                <!-- プロジェクト: 3年1組 数学 -->
-                <div class="project-group">
-                    <div class="project-header collapsed" onclick="toggleProject(this)">
-                        <span class="project-icon">📁</span>
-                        <span class="project-name">3年1組 数学</span>
-                        <span class="chevron">▼</span>
+            </div>
+            
+            <!-- 単元振り返り（先生用）- Coming Soon -->
+            <div class="card disabled">
+                <div class="card-content">
+                    <div class="card-icon purple">
+                        <svg viewBox="0 0 24 24">
+                            <path d="M4 5a1 1 0 011-1h4a1 1 0 011 1v4a1 1 0 01-1 1H5a1 1 0 01-1-1V5zm10 0a1 1 0 011-1h4a1 1 0 011 1v4a1 1 0 01-1 1h-4a1 1 0 01-1-1V5zM4 15a1 1 0 011-1h4a1 1 0 011 1v4a1 1 0 01-1 1H5a1 1 0 01-1-1v-4zm10 0a1 1 0 011-1h4a1 1 0 011 1v4a1 1 0 01-1 1h-4a1 1 0 01-1-1v-4z"/>
+                        </svg>
                     </div>
-                    <div class="project-threads hidden">
-                        <div class="project-action-btn" onclick="startProjectThread('3年1組', '数学')">
-                            ➕ 新規スレッド
-                        </div>
-                        <div class="history-item" onclick="loadHistory('P18の発問')">
-                            <div class="history-title">5限: P18の発問案を3つ</div>
-                            <div class="history-date">昨日 13:20</div>
-                        </div>
-                        <div class="history-item" onclick="loadHistory('宿題設計')">
-                            <div class="history-title">理解度別の宿題設計</div>
-                            <div class="history-date">9/27 14:30</div>
-                        </div>
-                        <div class="project-action-btn secondary" onclick="viewAllHistory('3年1組', '数学')">
-                            📂 履歴を全部見る
-                        </div>
-                    </div>
-                </div>
-                
-                <!-- プロジェクト: 2年3組 英語 -->
-                <div class="project-group">
-                    <div class="project-header collapsed" onclick="toggleProject(this)">
-                        <span class="project-icon">📁</span>
-                        <span class="project-name">2年3組 英語</span>
-                        <span class="chevron">▼</span>
-                    </div>
-                    <div class="project-threads hidden">
-                        <div class="project-action-btn" onclick="startProjectThread('2年3組', '英語')">
-                            ➕ 新規スレッド
-                        </div>
-                        <div class="history-item" onclick="loadHistory('リスニング教材')">
-                            <div class="history-title">2限: リスニング教材の選定</div>
-                            <div class="history-date">9/26 09:15</div>
-                        </div>
-                        <div class="project-action-btn secondary" onclick="viewAllHistory('2年3組', '英語')">
-                            📂 履歴を全部見る
-                        </div>
+                    <div class="card-body">
+                        <h2 class="card-title">単元振り返り（先生用）<span class="badge coming-soon">準備中</span></h2>
+                        <p class="card-description">クラス全体の振り返り状況を確認し、生徒へコメントを送信できる教師向けダッシュボード。</p>
+                        <span class="card-button">
+                            デモを見る
+                            <svg viewBox="0 0 24 24">
+                                <path d="M5 12h14m-7-7l7 7-7 7"/>
+                            </svg>
+                        </span>
                     </div>
                 </div>
             </div>
         </div>
     </div>
     
-    <!-- メインエリア -->
-    <div class="main-area">
-        <div class="chat-header">
-            <div class="context-badge" id="contextBadge">
-                <!-- JavaScriptで動的に生成 -->
-            </div>
-            <button class="data-indicator" onclick="openDataSettings()" style="cursor: pointer; border: 1px solid var(--border); background: white; padding: 6px 12px; border-radius: 8px; transition: all 0.2s;">
-                <span class="data-dot"></span>
-                <span class="data-label">接続データを確認</span>
-            </button>
-        </div>
-        
-        <div class="chat-container" id="chatContainer">
-            <div class="welcome-screen" id="welcomeScreen">
-                <!-- JavaScriptで動的に生成 -->
-            </div>
-            
-            <div id="messagesArea"></div>
-        </div>
-        
-        <div class="input-area">
-            <div class="input-container">
-                <div class="quick-prompts" id="quickPrompts">
-                    <!-- JavaScriptで動的に生成 -->
-                </div>
-                <div id="attachedFiles" class="attached-files"></div>
-                <div class="input-wrapper">
-                    <button class="attach-btn" onclick="attachFile()" title="ファイルを添付">
-                        📎
-                    </button>
-                    <div class="input-box">
-                        <textarea 
-                            id="messageInput" 
-                            placeholder="何でも聞いてください" 
-                            rows="1"
-                            onkeydown="handleKeyDown(event)"
-                            oninput="autoResize(this)"
-                        ></textarea>
-                    </div>
-                    <button class="send-btn" onclick="sendMessage()" id="sendBtn">
-                        ⬆️
-                    </button>
-                </div>
-            </div>
-        </div>
-    </div>
-    
-    <!-- スナックバーコンテナ -->
-    <div class="snackbar-container" id="snackbarContainer"></div>
-    
-    <!-- SharePointモーダル -->
-    <div class="sharepoint-modal" id="sharepointModal">
-        <div class="sharepoint-content">
-            <div class="sharepoint-header">
-                <div class="sharepoint-title">
-                    <div class="sharepoint-icon">📂</div>
-                    <div class="sharepoint-title-text">
-                        <h2 id="sharepointFileName">中3_二次関数の応用_授業案_45分.docx</h2>
-                        <div class="sharepoint-breadcrumb">大阪市ナレッジ共有 > 数学 > 中学3年 > 二次関数</div>
-                    </div>
-                </div>
-                <button class="sharepoint-close" onclick="closeSharePointModal()">×</button>
-            </div>
-            <div class="sharepoint-body">
-                <div class="sharepoint-meta">
-                    <div class="sharepoint-meta-item">
-                        <span class="sharepoint-meta-label">作成者</span>
-                        <span class="sharepoint-meta-value">大阪市立東中学校 田中先生</span>
-                    </div>
-                    <div class="sharepoint-meta-item">
-                        <span class="sharepoint-meta-label">教科・学年</span>
-                        <span class="sharepoint-meta-value">数学 / 中3</span>
-                    </div>
-                    <div class="sharepoint-meta-item">
-                        <span class="sharepoint-meta-label">登録日</span>
-                        <span class="sharepoint-meta-value">2024年6月12日</span>
-                    </div>
-                    <div class="sharepoint-meta-item">
-                        <span class="sharepoint-meta-label">単元</span>
-                        <span class="sharepoint-meta-value">二次関数の応用</span>
-                    </div>
-                </div>
-                
-                <div class="sharepoint-section">
-                    <div class="sharepoint-section-title">🎥 導入動画（3分）</div>
-                    <div class="video-container" style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); display: flex; align-items: center; justify-content: center; position: relative; height: 0; padding-bottom: 56.25%;">
-                        <div style="position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); text-align: center; color: white;">
-                            <div style="font-size: 48px; margin-bottom: 12px;">▶️</div>
-                            <div style="font-size: 16px; font-weight: 600;">バスケットボールのシュート軌道</div>
-                            <div style="font-size: 13px; opacity: 0.9; margin-top: 8px;">二次関数の導入動画（3分12秒）</div>
-                        </div>
-                    </div>
-                    <p style="margin-top: 12px; font-size: 13px; color: var(--text-secondary);">
-                        📌 この動画は、バスケットボールのシュート軌道を使って二次関数を身近に感じさせる導入です。実際の授業では、YouTube等の動画サービスから再生できます。
-                    </p>
-                </div>
-                
-                <div class="sharepoint-section">
-                    <div class="sharepoint-section-title">📝 指導案（45分授業）</div>
-                    <div class="lesson-plan">
-                        <h3>🎯 本時の目標</h3>
-                        <ul>
-                            <li>二次関数 y = a(x-p)² + q のグラフの特徴を理解し、実生活の事象と関連付けて説明できる</li>
-                            <li>頂点の座標や軸の方程式を求めることができる</li>
-                            <li>グラフの開き方とaの値の関係を理解する</li>
-                        </ul>
-                        
-                        <h3>📚 準備物</h3>
-                        <ul>
-                            <li>タブレット端末（1人1台）</li>
-                            <li>ワークシート「二次関数の探検」</li>
-                            <li>バスケットボールのシュート動画（導入用）</li>
-                            <li>グラフ作成アプリ（Desmos推奨）</li>
-                        </ul>
-                        
-                        <h3>⏰ 展開</h3>
-                        
-                        <strong>導入（10分）</strong>
-                        <ul>
-                            <li>【0-3分】動画視聴：バスケのシュート軌道を観察</li>
-                            <li>【3-5分】発問：「このボールの軌道、どんな形をしている？数式で表せそう？」</li>
-                            <li>【5-8分】前時の復習：y = ax² のグラフの特徴</li>
-                            <li>【8-10分】本時の学習課題を提示：「グラフを自由に動かせるようになろう」</li>
-                        </ul>
-                        
-                        <strong>展開（30分）</strong>
-                        <ul>
-                            <li>【10-20分】グラフの平行移動の理解
-                                <ul>
-                                    <li>Desmosを使って y = a(x-p)² + q のp, qを動かす体験</li>
-                                    <li>ペアで気づきを共有：「pを変えると…」「qを変えると…」</li>
-                                </ul>
-                            </li>
-                            <li>【20-30分】練習問題（ワークシート）
-                                <ul>
-                                    <li>基礎：頂点を読み取る問題（5問）</li>
-                                    <li>標準：式から頂点を求める問題（3問）</li>
-                                    <li>発展：条件に合うグラフを描く問題（2問）</li>
-                                </ul>
-                            </li>
-                            <li>【30-35分】グループ討議：「なぜシュートの軌道は放物線になるのか？」</li>
-                        </ul>
-                        
-                        <strong>まとめ（5分）</strong>
-                        <ul>
-                            <li>【35-40分】本時の振り返り：わかったこと・疑問を3行で記入</li>
-                            <li>【40-45分】次時予告：「実際の噴水やジェットコースターの設計に挑戦しよう」</li>
-                        </ul>
-                        
-                        <h3>💡 指導上の留意点</h3>
-                        <ul>
-                            <li>グラフアプリの操作に不慣れな生徒には、ペアで教え合う時間を設ける</li>
-                            <li>「数式が苦手」という生徒には、まずグラフの視覚的理解を優先させる</li>
-                            <li>発展層の生徒には「aの値が負の場合」を考えさせる追加課題を用意</li>
-                        </ul>
-                        
-                        <h3>📊 評価規準</h3>
-                        <ul>
-                            <li><strong>知識・技能：</strong>頂点の座標を式から読み取ることができる</li>
-                            <li><strong>思考・判断・表現：</strong>パラメータとグラフの変化を関連付けて説明できる</li>
-                            <li><strong>主体的に学習に取り組む態度：</strong>ペア活動で積極的に意見交換している</li>
-                        </ul>
-                    </div>
-                    
-                    <button type="button" class="download-btn" onclick="downloadFile()">
-                        💾 指導案をダウンロード（.docx）
-                    </button>
-                </div>
-            </div>
-        </div>
-    </div>
-    
-    <!-- 生徒カルテモーダル -->
-    <div class="sharepoint-modal" id="karteModal">
-        <div class="sharepoint-content" style="max-width: 500px;">
-            <div class="sharepoint-header" style="background: linear-gradient(135deg, #0066CC 0%, #0052A3 100%);">
-                <div class="sharepoint-title">
-                    <div class="sharepoint-icon" style="background: white;">
-                        <span style="font-size: 20px;">📋</span>
-                    </div>
-                    <div class="sharepoint-title-text">
-                        <h2 style="color: white;">生徒カルテを開く</h2>
-                        <div class="sharepoint-breadcrumb" style="color: rgba(255,255,255,0.8);">まなびポケット</div>
-                    </div>
-                </div>
-                <button class="sharepoint-close" onclick="closeKarteModal()" style="color: white;">×</button>
-            </div>
-            <div class="sharepoint-body" style="text-align: center; padding: 32px;">
-                <div style="font-size: 64px; margin-bottom: 16px;">📂</div>
-                <h3 style="font-size: 18px; font-weight: 600; color: #1F2937; margin-bottom: 12px;">まなびポケットの生徒カルテが<br>別画面で開きます</h3>
-                <p style="font-size: 14px; color: #6B7280; margin-bottom: 24px;">上田 亜季さん（6年1組27番）の<br>詳細情報を確認できます。</p>
-                <div style="display: flex; gap: 12px; justify-content: center;">
-                    <button type="button" onclick="closeKarteModal()" style="padding: 12px 24px; background: white; border: 2px solid #E5E7EB; border-radius: 8px; font-size: 14px; font-weight: 600; color: #6B7280; cursor: pointer; transition: all 0.2s;">キャンセル</button>
-                    <button type="button" onclick="openKarteExternal()" style="padding: 12px 24px; background: #0066CC; border: none; border-radius: 8px; font-size: 14px; font-weight: 600; color: white; cursor: pointer; transition: all 0.2s; display: flex; align-items: center; gap: 8px;">
-                        <span>開く</span>
-                        <span style="font-size: 16px;">↗️</span>
-                    </button>
-                </div>
-            </div>
-        </div>
-    </div>
-    
-    <script>
-        let chatActive = false;
-        let attachedFiles = [];
-        let currentProject = null;
-        let currentContext = null;
-        
-        // スナックバー表示関数
-        function showSnackbar(message, icon = 'ℹ️', duration = 4000) {
-            const container = document.getElementById('snackbarContainer');
-            const snackbar = document.createElement('div');
-            snackbar.className = 'snackbar';
-            
-            snackbar.innerHTML = `
-                <span class="snackbar-icon">${icon}</span>
-                <div class="snackbar-content">${message}</div>
-                <button class="snackbar-close" onclick="closeSnackbar(this)">×</button>
-            `;
-            
-            container.appendChild(snackbar);
-            
-            setTimeout(() => {
-                closeSnackbar(snackbar.querySelector('.snackbar-close'));
-            }, duration);
-        }
-        
-        function closeSnackbar(closeBtn) {
-            const snackbar = closeBtn.closest('.snackbar');
-            snackbar.classList.add('closing');
-            setTimeout(() => {
-                snackbar.remove();
-            }, 300);
-        }
-        
-        // 生徒カルテモーダル
-        function openKarteModal() {
-            const modal = document.getElementById('karteModal');
-            modal.classList.add('active');
-            document.body.style.overflow = 'hidden';
-        }
-        
-        function closeKarteModal() {
-            const modal = document.getElementById('karteModal');
-            modal.classList.remove('active');
-            document.body.style.overflow = '';
-        }
-        
-        function openKarteExternal() {
-            closeKarteModal();
-            showSnackbar('まなびポケットの生徒カルテを別タブで開きました（デモ）', '✅', 3000);
-        }
-        
-        // ページ読み込み時の初期化
-        window.addEventListener('DOMContentLoaded', function() {
-            updateHeader();
-            updateWelcomeMessage();
-            updateQuickPrompts();
-        });
-        
-        // クイックプロンプトの更新
-        function updateQuickPrompts() {
-            const quickPromptsContainer = document.getElementById('quickPrompts');
-            const messageInput = document.getElementById('messageInput');
-            
-            if (!currentContext) {
-                quickPromptsContainer.innerHTML = '';
-                quickPromptsContainer.style.display = 'none';
-                messageInput.placeholder = '何でも聞いてください';
-                return;
-            }
-            
-            quickPromptsContainer.style.display = 'flex';
-            
-            // 時限情報がある場合（時間割から開始）
-            if (currentContext.period) {
-                messageInput.placeholder = '何でも聞いてください（例：導入考えて）';
-                quickPromptsContainer.innerHTML = `
-                    <div class="quick-prompt" onclick="useSuggestion('導入考えて')">💡 導入考えて</div>
-                    <div class="quick-prompt" onclick="useSuggestion('発問案を3つ')">❓ 発問案を3つ</div>
-                    <div class="quick-prompt" onclick="useSuggestion('協働学習の設計')">👥 協働学習の設計</div>
-                    <div class="quick-prompt" onclick="useSuggestion('ナレッジ共有から似た授業案を探して')">📂 ナレッジ共有から探す</div>
-                `;
-            } else {
-                // プロジェクトから開始（時限情報なし）
-                messageInput.placeholder = '何でも聞いてください（例：年間計画を確認）';
-                quickPromptsContainer.innerHTML = `
-                    <div class="quick-prompt" onclick="useSuggestion('年間計画を確認')">📅 年間計画を確認</div>
-                    <div class="quick-prompt" onclick="useSuggestion('評価基準を相談')">📝 評価基準を相談</div>
-                    <div class="quick-prompt" onclick="useSuggestion('この単元の教材をナレッジ共有から探して')">📂 教材を探す</div>
-                    <div class="quick-prompt" onclick="useSuggestion('このクラスの傾向')">📊 このクラスの傾向</div>
-                `;
-            }
-        }
-        
-        // プロジェクトとスレッドの切り替え
-        function createScheduleThread(period, classNum, subject, topic, time) {
-            const projectName = `${classNum} ${subject}`;
-            currentProject = projectName;
-            currentContext = {
-                period: period,
-                classNum: classNum,
-                subject: subject,
-                topic: topic,
-                time: time
-            };
-            
-            chatActive = false;
-            document.getElementById('messagesArea').innerHTML = '';
-            document.getElementById('welcomeScreen').style.display = 'flex';
-            document.getElementById('messageInput').value = '';
-            
-            updateHeader();
-            updateWelcomeMessage();
-            updateQuickPrompts();
-            highlightScheduleItem();
-        }
-        
-        function updateHeader() {
-            const headerBadges = document.getElementById('contextBadge');
-            
-            if (!currentContext) {
-                headerBadges.innerHTML = '';
-                return;
-            }
-            
-            if (currentContext.period) {
-                headerBadges.innerHTML = `
-                    <span class="badge project-badge">
-                        <span class="badge-icon">📁</span>
-                        <span>${currentContext.classNum} ${currentContext.subject}</span>
-                    </span>
-                    <span class="badge context-badge-item">${currentContext.period} ${currentContext.topic}</span>
-                `;
-            } else {
-                headerBadges.innerHTML = `
-                    <span class="badge project-badge">
-                        <span class="badge-icon">📁</span>
-                        <span>${currentContext.classNum} ${currentContext.subject}</span>
-                    </span>
-                `;
-            }
-        }
-        
-        function updateWelcomeMessage() {
-            const welcomeScreen = document.getElementById('welcomeScreen');
-            
-            if (!currentContext) {
-                welcomeScreen.innerHTML = `
-                    <div class="welcome-icon">👋</div>
-                    <div class="welcome-title">こんにちは、鈴木先生</div>
-                    <div class="welcome-subtitle">
-                        先生AIへようこそ。なんでも聞いてね。
-                    </div>
-                    <div class="welcome-hint">
-                        💡 授業情報を取り入れる場合は、時間割からスマートスレッドを開始できます。
-                    </div>
-                `;
-                return;
-            }
-            
-            if (currentContext.period) {
-                // 時間割から開始（スマートスレッド）
-                welcomeScreen.innerHTML = `
-                    <div class="welcome-icon">✨</div>
-                    <div class="welcome-title">スマートスレッド</div>
-                    <div class="welcome-subtitle">
-                        ${currentContext.classNum}の${currentContext.period}（${currentContext.topic}）について
-                    </div>
-                    <div class="preset-info">
-                        <span class="preset-label">📌</span>
-                        <div class="preset-tags">
-                            <span class="preset-tag">${currentContext.classNum}</span>
-                            <span class="preset-tag">${currentContext.subject}</span>
-                            <span class="preset-tag dynamic">${currentContext.topic}</span>
-                        </div>
-                    </div>
-                    <div class="suggestion-grid" style="margin-top: 24px;">
-                        <div class="suggestion-card" onclick="useSuggestion('導入考えて')">
-                            <div class="suggestion-icon">🚀</div>
-                            <div class="suggestion-text">導入考えて</div>
-                        </div>
-                        <div class="suggestion-card" onclick="useSuggestion('ナレッジ共有から似た授業案を探して')">
-                            <div class="suggestion-icon">📂</div>
-                            <div class="suggestion-text">似た授業案を探す</div>
-                        </div>
-                        <div class="suggestion-card" onclick="useSuggestion('このクラスの最近の様子は？')">
-                            <div class="suggestion-icon">📊</div>
-                            <div class="suggestion-text">このクラスの最近の様子は？</div>
-                        </div>
-                        <div class="suggestion-card" onclick="useSuggestion('協働学習の設計して')">
-                            <div class="suggestion-icon">👥</div>
-                            <div class="suggestion-text">協働学習の設計して</div>
-                        </div>
-                    </div>
-                `;
-            } else {
-                // プロジェクトから開始
-                welcomeScreen.innerHTML = `
-                    <div class="welcome-icon">📁</div>
-                    <div class="welcome-title">プロジェクト</div>
-                    <div class="welcome-subtitle">
-                        ${currentContext.classNum} ${currentContext.subject}について
-                    </div>
-                    <div class="preset-info">
-                        <span class="preset-label">📌</span>
-                        <div class="preset-tags">
-                            <span class="preset-tag">${currentContext.classNum}</span>
-                            <span class="preset-tag">${currentContext.subject}</span>
-                        </div>
-                    </div>
-                    <div class="suggestion-grid" style="margin-top: 24px;">
-                        <div class="suggestion-card" onclick="useSuggestion('この単元の教材をナレッジ共有から探して')">
-                            <div class="suggestion-icon">📂</div>
-                            <div class="suggestion-text">教材を探す</div>
-                        </div>
-                        <div class="suggestion-card" onclick="useSuggestion('年間計画を確認')">
-                            <div class="suggestion-icon">📅</div>
-                            <div class="suggestion-text">年間計画を確認</div>
-                        </div>
-                        <div class="suggestion-card" onclick="useSuggestion('評価基準を相談')">
-                            <div class="suggestion-icon">📝</div>
-                            <div class="suggestion-text">評価基準を相談</div>
-                        </div>
-                        <div class="suggestion-card" onclick="useSuggestion('このクラスの最近の様子は？')">
-                            <div class="suggestion-icon">📊</div>
-                            <div class="suggestion-text">このクラスの様子</div>
-                        </div>
-                    </div>
-                `;
-            }
-        }
-        
-        function highlightScheduleItem() {
-            document.querySelectorAll('.schedule-item').forEach(item => {
-                item.classList.remove('active');
-            });
-        }
-        
-        function toggleProject(element) {
-            element.classList.toggle('collapsed');
-            const threads = element.nextElementSibling;
-            threads.classList.toggle('hidden');
-        }
-        
-        function startProjectThread(classNum, subject) {
-            currentProject = `${classNum} ${subject}`;
-            currentContext = {
-                period: '',
-                classNum: classNum,
-                subject: subject,
-                topic: '',
-                time: ''
-            };
-            
-            chatActive = false;
-            document.getElementById('messagesArea').innerHTML = '';
-            document.getElementById('welcomeScreen').style.display = 'flex';
-            document.getElementById('messageInput').value = '';
-            
-            updateHeader();
-            updateWelcomeMessage();
-            updateQuickPrompts();
-        }
-        
-        function viewAllHistory(classNum, subject) {
-            showSnackbar(`${classNum} ${subject}の全履歴を表示します（プロトタイプのため未実装）`, '📂', 3000);
-        }
-        
-        function showProjectSelector() {
-            const projects = [
-                '3年2組 数学',
-                '3年1組 数学',
-                '2年3組 英語'
-            ];
-            
-            const projectList = projects.map(p => `• ${p}`).join('<br>');
-            
-            showSnackbar(`プロジェクトを選択してチャットを開始<br><br>${projectList}<br><br>（プロトタイプのため未実装）`, '📁', 5000);
-        }
-        
-        function scrollToSchedule() {
-            document.querySelector('.schedule-section').scrollIntoView({ behavior: 'smooth' });
-            const scheduleSection = document.querySelector('.schedule-section');
-            scheduleSection.style.backgroundColor = '#FEF3C7';
-            setTimeout(() => {
-                scheduleSection.style.backgroundColor = '';
-            }, 1500);
-        }
-        
-        function newChat() {
-            currentProject = null;
-            currentContext = null;
-            
-            chatActive = false;
-            document.getElementById('messagesArea').innerHTML = '';
-            document.getElementById('welcomeScreen').style.display = 'flex';
-            document.getElementById('messageInput').value = '';
-            
-            updateHeader();
-            updateWelcomeMessage();
-            updateQuickPrompts();
-        }
-        
-        function autoResize(textarea) {
-            textarea.style.height = 'auto';
-            textarea.style.height = textarea.scrollHeight + 'px';
-        }
-        
-        function handleKeyDown(event) {
-            if (event.key === 'Enter' && !event.shiftKey) {
-                event.preventDefault();
-                sendMessage();
-            }
-        }
-        
-        function attachFile() {
-            const fileTypes = [
-                { name: '授業案_二次関数.docx', type: '📄' },
-                { name: 'ワークシート_放物線.pdf', type: '📑' },
-                { name: '前回テスト結果.xlsx', type: '📊' },
-                { name: '参考資料_実生活の応用.pptx', type: '📊' }
-            ];
-            
-            const randomFile = fileTypes[Math.floor(Math.random() * fileTypes.length)];
-            const fileId = Date.now();
-            
-            attachedFiles.push({ id: fileId, name: randomFile.name, type: randomFile.type });
-            renderAttachedFiles();
-        }
-        
-        function removeFile(fileId) {
-            attachedFiles = attachedFiles.filter(f => f.id !== fileId);
-            renderAttachedFiles();
-        }
-        
-        function renderAttachedFiles() {
-            const container = document.getElementById('attachedFiles');
-            if (attachedFiles.length === 0) {
-                container.innerHTML = '';
-                return;
-            }
-            
-            container.innerHTML = attachedFiles.map(file => `
-                <div class="attached-file">
-                    <span>${file.type}</span>
-                    <span class="attached-file-name">${file.name}</span>
-                    <span class="remove-file" onclick="removeFile(${file.id})">×</span>
-                </div>
-            `).join('');
-        }
-        
-        function useSuggestion(text) {
-            document.getElementById('messageInput').value = text;
-            sendMessage();
-        }
-        
-        function sendMessage() {
-            const input = document.getElementById('messageInput');
-            const message = input.value.trim();
-            
-            if (!message && attachedFiles.length === 0) return;
-            
-            if (!chatActive) {
-                document.getElementById('welcomeScreen').style.display = 'none';
-                chatActive = true;
-            }
-            
-            let fileInfo = '';
-            if (attachedFiles.length > 0) {
-                fileInfo = '<div style="margin-top: 8px; display: flex; gap: 6px; flex-wrap: wrap;">' +
-                    attachedFiles.map(f => `<span style="padding: 4px 8px; background: var(--bg-secondary); border-radius: 6px; font-size: 11px;">${f.type} ${f.name}</span>`).join('') +
-                    '</div>';
-            }
-            
-            addMessage('user', (message || 'ファイルを添付しました') + fileInfo);
-            
-            input.value = '';
-            input.style.height = 'auto';
-            attachedFiles = [];
-            renderAttachedFiles();
-            
-            showTyping();
-            
-            setTimeout(() => {
-                hideTyping();
-                const response = generateResponse(message);
-                addMessage('assistant', response.text, response.sources);
-            }, 1500);
-        }
-        
-        function addMessage(role, text, sources = []) {
-            const messagesArea = document.getElementById('messagesArea');
-            const messageDiv = document.createElement('div');
-            messageDiv.className = `message ${role}`;
-            
-            const avatar = role === 'user' ? '👤' : '🤖';
-            
-            let sourceBadges = '';
-            if (sources.length > 0) {
-                sourceBadges = '<div class="message-meta">' +
-                    sources.map(s => `<span class="source-badge">📊 ${s}</span>`).join('') +
-                    '</div>';
-            }
-            
-            messageDiv.innerHTML = `
-                <div class="message-avatar">${avatar}</div>
-                <div class="message-content">
-                    <div class="message-text">${text}</div>
-                    ${sourceBadges}
-                </div>
-            `;
-            
-            messagesArea.appendChild(messageDiv);
-            messagesArea.scrollTop = messagesArea.scrollHeight;
-        }
-        
-        function showTyping() {
-            const messagesArea = document.getElementById('messagesArea');
-            const typingDiv = document.createElement('div');
-            typingDiv.className = 'message assistant';
-            typingDiv.id = 'typingIndicator';
-            typingDiv.innerHTML = `
-                <div class="message-avatar">🤖</div>
-                <div class="message-content">
-                    <div class="message-text">
-                        <div class="typing-indicator">
-                            <div class="typing-dot"></div>
-                            <div class="typing-dot"></div>
-                            <div class="typing-dot"></div>
-                        </div>
-                    </div>
-                </div>
-            `;
-            messagesArea.appendChild(typingDiv);
-            messagesArea.scrollTop = messagesArea.scrollHeight;
-        }
-        
-        function hideTyping() {
-            const typing = document.getElementById('typingIndicator');
-            if (typing) typing.remove();
-        }
-        
-        // ナレッジ共有連携モック - 応答生成
-        function generateResponse(message) {
-            const lowerMessage = message.toLowerCase();
-            
-            // ナレッジ共有検索のトリガー
-            if (lowerMessage.includes('ナレッジ共有') || lowerMessage.includes('教材案') || 
-                lowerMessage.includes('似た授業案') || lowerMessage.includes('他の先生の実践') ||
-                lowerMessage.includes('教材を') || lowerMessage.includes('教材をナレッジ')) {
-                
-                const topic = currentContext?.topic || '二次関数';
-                const subject = currentContext?.subject || '数学';
-                
-                return {
-                    text: `<strong>大阪市ナレッジ共有（SharePoint）から、「${topic}」の授業案を3件見つけました。</strong><br><br>
-クラスの状況に近いものを選んでください。<br><br>
-
-<div class="knowledge-card">
-    <div class="knowledge-card-title">
-        📄 中3_二次関数の応用_授業案_45分.docx
-    </div>
-    <div class="knowledge-card-meta">
-        <div class="knowledge-card-meta-item">👤 大阪市立東中学校 田中先生</div>
-        <div class="knowledge-card-meta-item">📚 ${subject} / 中3</div>
-        <div class="knowledge-card-meta-item">📅 2024-06-12</div>
-    </div>
-    <button type="button" class="knowledge-card-btn" onclick="openKnowledgeItem('中3_二次関数の応用_授業案_45分.docx')">
-        📂 ナレッジ共有から開く
-    </button>
-</div>
-
-<div class="knowledge-card">
-    <div class="knowledge-card-title">
-        📊 中3_二次関数_実生活とのつながり.pptx
-    </div>
-    <div class="knowledge-card-meta">
-        <div class="knowledge-card-meta-item">👤 大阪市立西中学校 佐藤先生</div>
-        <div class="knowledge-card-meta-item">📚 ${subject} / 中3</div>
-        <div class="knowledge-card-meta-item">📅 2024-05-28</div>
-    </div>
-    <button type="button" class="knowledge-card-btn" onclick="openKnowledgeItem('中3_二次関数_実生活とのつながり.pptx')">
-        📂 ナレッジ共有から開く
-    </button>
-</div>
-
-<div class="knowledge-card">
-    <div class="knowledge-card-title">
-        📝 二次関数_つまずきポイントと指導案.pdf
-    </div>
-    <div class="knowledge-card-meta">
-        <div class="knowledge-card-meta-item">👤 大阪市立南中学校 山田先生</div>
-        <div class="knowledge-card-meta-item">📚 ${subject} / 中3</div>
-        <div class="knowledge-card-meta-item">📅 2024-04-15</div>
-    </div>
-    <button type="button" class="knowledge-card-btn" onclick="openKnowledgeItem('二次関数_つまずきポイントと指導案.pdf')">
-        📂 ナレッジ共有から開く
-    </button>
-</div>`,
-                    sources: [
-                        '大阪市ナレッジ共有 / 中3_二次関数の応用_授業案_45分.docx',
-                        '大阪市ナレッジ共有 / 中3_二次関数_実生活とのつながり.pptx',
-                        '大阪市ナレッジ共有 / 二次関数_つまずきポイントと指導案.pdf'
-                    ]
-                };
-            }
-            
-            if (!currentContext) {
-                if (lowerMessage.includes('上田') && lowerMessage.includes('様子')) {
-                    // 初期表示：注意事項のみ + カテゴリ選択肢
-                    return {
-                        text: `<strong>👩‍🎓 上田 亜季さん（6年1組27番）</strong><br><br>
-
-<div style="background: #FEF3C7; border-left: 4px solid #F59E0B; padding: 12px; border-radius: 8px; margin-bottom: 16px;">
-⚠️ <strong>注意が必要な状況</strong><br>
-直近1週間、<span style="color: #DC2626; font-weight: 600;">早退や遅刻が続いており</span>、心や体の調子が少し気になるところです。心の健康観察で「学校が楽しくない」とコメントしています。
-</div>
-
-<div style="margin-bottom: 16px;">
-<button type="button" onclick="openKarteModal()" style="display: inline-flex; align-items: center; gap: 6px; padding: 8px 16px; background: #0066CC; color: white; border-radius: 8px; border: none; font-size: 13px; font-weight: 600; cursor: pointer;">
-📂 生徒カルテを開く（まなびポケット）
-</button>
-</div>
-
-詳しく確認したい項目を選んでください：<br><br>
-
-<div style="display: flex; flex-wrap: wrap; gap: 8px;">
-<button type="button" onclick="useSuggestion('上田さんの学校生活状況を詳しく')" style="padding: 10px 20px; background: white; border: 2px solid #0066CC; border-radius: 8px; color: #0066CC; font-size: 13px; font-weight: 600; cursor: pointer; transition: all 0.2s;" onmouseover="this.style.background='#EBF5FF'" onmouseout="this.style.background='white'">🏫 学校生活状況</button>
-<button type="button" onclick="useSuggestion('上田さんの学習状況を詳しく')" style="padding: 10px 20px; background: white; border: 2px solid #0066CC; border-radius: 8px; color: #0066CC; font-size: 13px; font-weight: 600; cursor: pointer; transition: all 0.2s;" onmouseover="this.style.background='#EBF5FF'" onmouseout="this.style.background='white'">📚 学習状況</button>
-<button type="button" onclick="useSuggestion('上田さんの留意事項を詳しく')" style="padding: 10px 20px; background: white; border: 2px solid #0066CC; border-radius: 8px; color: #0066CC; font-size: 13px; font-weight: 600; cursor: pointer; transition: all 0.2s;" onmouseover="this.style.background='#EBF5FF'" onmouseout="this.style.background='white'">🔔 留意事項</button>
-</div>`,
-                        sources: ['まなびポケット生徒カルテ', '心の健康観察']
-                    };
-                } else if (lowerMessage.includes('上田') && lowerMessage.includes('学校生活')) {
-                    // 学校生活状況の詳細
-                    return {
-                        text: `<strong>🏫 上田亜季さんの学校生活状況</strong><br><br>
-
-<strong>📊 出欠状況：</strong><br>
-• 欠席日数：<span style="color: #0066CC; font-weight: 600;">10日</span><br>
-• 遅刻日数：<span style="color: #DC2626; font-weight: 600;">14日</span>（注意）<br>
-• 早退日数：<span style="color: #F59E0B; font-weight: 600;">8日</span>（注意）<br>
-• 保健室来室数：<span style="color: #6B7280;">2日</span><br><br>
-
-<strong>🏥 保健室利用状況（今年度）：</strong><br>
-• 03/05 12:10 けが - 突き指（指）- 冷却<br>
-• 03/04 09:01 病気 - 咳 - 教室復帰して経過観察<br>
-• 03/04 - その他 - 保健室登校<br>
-• 03/04 - けが - 刺創（頭部）- 医療機関への搬送<br><br>
-
-<strong>💚 心の健康観察：</strong><br>
-• 直近で「学校が楽しくない」とコメント<br>
-• 心の健康観察では3以上の回答が多い<br>
-• 長期的に見ると、欠席数は学年平均より1.8回/月少ないため、基本的には問題なく通学<br><br>
-
-<strong>📝 日常所見（直近30日間）：</strong><br>
-• 12/05 <span style="background: #DBEAFE; padding: 2px 6px; border-radius: 4px; font-size: 11px;">算数</span> 授業中に寝ていることがある（岡野ありさ先生）<br>
-• 10/02 <span style="background: #D1FAE5; padding: 2px 6px; border-radius: 4px; font-size: 11px;">表彰</span> 作文コンクールで大賞を受賞（岡野ありさ先生）<br>
-• 06/04 <span style="background: #FEE2E2; padding: 2px 6px; border-radius: 4px; font-size: 11px;">クラブ</span> キャプテンになりました（岡野ありさ先生）<br><br>
-
-<strong>📈 AIレポートサマリー（生活面）：</strong><br>
-<div style="background: #FEF3C7; border-left: 4px solid #F59E0B; padding: 12px; border-radius: 8px;">
-直近1週間の間に心の健康観察と保健室利用状況に気にかけたい変化あり ⬇️
-</div><br>
-
-<div style="margin-bottom: 16px;">
-<button type="button" onclick="openKarteModal()" style="display: inline-flex; align-items: center; gap: 6px; padding: 8px 16px; background: #0066CC; color: white; border-radius: 8px; border: none; font-size: 13px; font-weight: 600; cursor: pointer;">
-📂 生徒カルテを開く（まなびポケット）
-</button>
-</div>
-
-<hr style="border: none; border-top: 1px solid #E5E7EB; margin: 16px 0;">
-
-<strong>📂 他の情報も確認する：</strong><br><br>
-<div style="display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 16px;">
-<button type="button" onclick="useSuggestion('上田さんの学習状況を詳しく')" style="padding: 10px 20px; background: white; border: 2px solid #0066CC; border-radius: 8px; color: #0066CC; font-size: 13px; font-weight: 600; cursor: pointer; transition: all 0.2s;" onmouseover="this.style.background='#EBF5FF'" onmouseout="this.style.background='white'">📚 学習状況</button>
-<button type="button" onclick="useSuggestion('上田さんの留意事項を詳しく')" style="padding: 10px 20px; background: white; border: 2px solid #0066CC; border-radius: 8px; color: #0066CC; font-size: 13px; font-weight: 600; cursor: pointer; transition: all 0.2s;" onmouseover="this.style.background='#EBF5FF'" onmouseout="this.style.background='white'">🔔 留意事項</button>
-</div>
-
-<strong>💡 おすすめのアクション：</strong><br><br>
-<div style="display: flex; flex-wrap: wrap; gap: 8px;">
-<button type="button" onclick="useSuggestion('上田さんへの声かけ例を教えて')" style="padding: 8px 16px; background: #EBF5FF; border: 1px solid #0066CC; border-radius: 20px; color: #0066CC; font-size: 13px; cursor: pointer;">💬 声かけ例を教えて</button>
-<button type="button" onclick="useSuggestion('上田さんの心の健康観察の推移を詳しく')" style="padding: 8px 16px; background: #EBF5FF; border: 1px solid #0066CC; border-radius: 20px; color: #0066CC; font-size: 13px; cursor: pointer;">💚 心の健康観察の推移</button>
-<button type="button" onclick="useSuggestion('スクールカウンセラーへの相談メモを作成')" style="padding: 8px 16px; background: #EBF5FF; border: 1px solid #0066CC; border-radius: 20px; color: #0066CC; font-size: 13px; cursor: pointer;">🏥 SC相談メモを作成</button>
-</div>`,
-                        sources: ['まなびポケット生徒カルテ', '校務システム', '心の健康観察', '保健室利用状況']
-                    };
-                } else if (lowerMessage.includes('上田') && lowerMessage.includes('学習状況')) {
-                    // 学習状況の詳細
-                    return {
-                        text: `<strong>📚 上田亜季さんの学習状況</strong><br><br>
-
-<strong>📊 定期テスト結果（直近180日間）：</strong><br>
-• 国語：<span style="color: #10B981; font-weight: 600;">97点</span>（平均を大幅に上回る）<br>
-• 算数・数学：<span style="color: #DC2626; font-weight: 600;">67点</span>（苦手な様子）<br>
-• 理科：<span style="color: #10B981; font-weight: 600;">96点</span><br>
-• 社会：<span style="color: #10B981; font-weight: 600;">92点</span><br>
-• 英語：<span style="color: #10B981; font-weight: 600;">91点</span><br><br>
-
-<strong>📈 単元テスト推移（算数）：</strong><br>
-分数の割り算で成績が下がっていることがわかります。<br><br>
-
-<strong>🎓 学習アプリ実施状況（直近7日間）：</strong><br>
-• 算数/数学「次数（確認テスト）最小公倍...」- 学習指示 - 標準 - 12/25実施 - 初回78点→最終90点<br>
-• 理科「メダカの誕生」- 学習指示 - 基本 - 12/24実施 - 初回50点→最終50点<br>
-• 理科「酸性・中性・アルカリ性」- 自主学習 - 基本 - 12/20実施 - 初回51点→最終60点<br>
-• 国語「ごんぎつね」- 学習指示 - 基本 - 12/20実施 - 初回51点→最終56点<br>
-• 外国語「Lesson6 彼らは〜」- 学習指示 - 基本 - 12/14実施 - 初回31点→最終70点<br><br>
-
-<strong>✨ ドリルパーク取り組み状況：</strong><br>
-<div style="background: #D1FAE5; border-left: 4px solid #10B981; padding: 12px; border-radius: 8px;">
-ここ1か月は学習アプリを熱心に取り組み中 ⬆️<br>
-学習アプリでは何度もトライして初回得点から点数を伸ばしており苦手をなくしていく努力が出来ています。
-</div><br>
-
-<strong>📊 ScTN質問紙「学びに向かう力」：</strong><br>
-スコアもクラス平均を大きく上回っています。<br><br>
-
-<strong>📝 傾向：</strong><br>
-国語と外国語の単元テストの点数は平均を大幅に上回ることが多いが、<span style="color: #DC2626; font-weight: 600;">算数は苦手な様子</span>。算数の授業で居眠りが指摘されており学期末テスト・単元テストの結果では、算数が他教科に比べてやや低め（クラス平均より下）です。<br><br>
-
-<div style="margin-bottom: 16px;">
-<button type="button" onclick="openKarteModal()" style="display: inline-flex; align-items: center; gap: 6px; padding: 8px 16px; background: #0066CC; color: white; border-radius: 8px; border: none; font-size: 13px; font-weight: 600; cursor: pointer;">
-📂 生徒カルテを開く（まなびポケット）
-</button>
-</div>
-
-<hr style="border: none; border-top: 1px solid #E5E7EB; margin: 16px 0;">
-
-<strong>📂 他の情報も確認する：</strong><br><br>
-<div style="display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 16px;">
-<button type="button" onclick="useSuggestion('上田さんの学校生活状況を詳しく')" style="padding: 10px 20px; background: white; border: 2px solid #0066CC; border-radius: 8px; color: #0066CC; font-size: 13px; font-weight: 600; cursor: pointer; transition: all 0.2s;" onmouseover="this.style.background='#EBF5FF'" onmouseout="this.style.background='white'">🏫 学校生活状況</button>
-<button type="button" onclick="useSuggestion('上田さんの留意事項を詳しく')" style="padding: 10px 20px; background: white; border: 2px solid #0066CC; border-radius: 8px; color: #0066CC; font-size: 13px; font-weight: 600; cursor: pointer; transition: all 0.2s;" onmouseover="this.style.background='#EBF5FF'" onmouseout="this.style.background='white'">🔔 留意事項</button>
-</div>
-
-<strong>💡 おすすめのアクション：</strong><br><br>
-<div style="display: flex; flex-wrap: wrap; gap: 8px;">
-<button type="button" onclick="useSuggestion('上田さんの算数の個別支援計画を考えて')" style="padding: 8px 16px; background: #EBF5FF; border: 1px solid #0066CC; border-radius: 20px; color: #0066CC; font-size: 13px; cursor: pointer;">📚 算数の個別支援計画</button>
-<button type="button" onclick="useSuggestion('上田さんへの声かけ例を教えて')" style="padding: 8px 16px; background: #EBF5FF; border: 1px solid #0066CC; border-radius: 20px; color: #0066CC; font-size: 13px; cursor: pointer;">💬 声かけ例を教えて</button>
-</div>`,
-                        sources: ['まなびポケット生徒カルテ', '校務システム', 'ドリルパーク学習履歴', 'ScTN質問紙']
-                    };
-                } else if (lowerMessage.includes('上田') && lowerMessage.includes('留意事項')) {
-                    // 留意事項の詳細
-                    return {
-                        text: `<strong>🔔 上田亜季さんの留意事項</strong><br><br>
-
-<div style="background: #FEE2E2; border-left: 4px solid #DC2626; padding: 12px; border-radius: 8px; margin-bottom: 16px;">
-<strong>⚠️ いじめ・対人関係</strong>（2024/11/03 登録）<br><br>
-小学校時代いじめられた経験あり。<br>
-<strong>2組高橋さん、3組佐藤さんとの関わりは注視してほしい</strong>とお母様からご要望。
-</div>
-
-<div style="background: #DBEAFE; border-left: 4px solid #3B82F6; padding: 12px; border-radius: 8px; margin-bottom: 16px;">
-<strong>🏠 家庭環境</strong>（2024/12/05 登録）<br><br>
-ご両親が共働きのため<strong>日中連絡がつきづらい</strong>ことが多いです。<br>
-連絡はまなびポケットのメッセージ機能や連絡帳の活用を推奨。
-</div>
-
-<strong>🤝 兄弟情報：</strong><br>
-• 2年2組 <a href="#" style="color: #0066CC;">上田 和樹</a>（弟）<br>
-• 4年1組 <a href="#" style="color: #0066CC;">上田 加奈子</a>（妹）<br><br>
-
-<strong>📋 所属：</strong><br>
-• 植物係<br>
-• お料理クラブ（キャプテン）<br><br>
-
-<div style="margin-bottom: 16px;">
-<button type="button" onclick="openKarteModal()" style="display: inline-flex; align-items: center; gap: 6px; padding: 8px 16px; background: #0066CC; color: white; border-radius: 8px; border: none; font-size: 13px; font-weight: 600; cursor: pointer;">
-📂 生徒カルテを開く（まなびポケット）
-</button>
-</div>
-
-<hr style="border: none; border-top: 1px solid #E5E7EB; margin: 16px 0;">
-
-<strong>📂 他の情報も確認する：</strong><br><br>
-<div style="display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 16px;">
-<button type="button" onclick="useSuggestion('上田さんの学校生活状況を詳しく')" style="padding: 10px 20px; background: white; border: 2px solid #0066CC; border-radius: 8px; color: #0066CC; font-size: 13px; font-weight: 600; cursor: pointer; transition: all 0.2s;" onmouseover="this.style.background='#EBF5FF'" onmouseout="this.style.background='white'">🏫 学校生活状況</button>
-<button type="button" onclick="useSuggestion('上田さんの学習状況を詳しく')" style="padding: 10px 20px; background: white; border: 2px solid #0066CC; border-radius: 8px; color: #0066CC; font-size: 13px; font-weight: 600; cursor: pointer; transition: all 0.2s;" onmouseover="this.style.background='#EBF5FF'" onmouseout="this.style.background='white'">📚 学習状況</button>
-</div>
-
-<strong>💡 おすすめのアクション：</strong><br><br>
-<div style="display: flex; flex-wrap: wrap; gap: 8px;">
-<button type="button" onclick="useSuggestion('上田さんの保護者への連絡文を作成')" style="padding: 8px 16px; background: #EBF5FF; border: 1px solid #0066CC; border-radius: 20px; color: #0066CC; font-size: 13px; cursor: pointer;">📝 保護者への連絡文を作成</button>
-<button type="button" onclick="useSuggestion('上田さんへの声かけ例を教えて')" style="padding: 8px 16px; background: #EBF5FF; border: 1px solid #0066CC; border-radius: 20px; color: #0066CC; font-size: 13px; cursor: pointer;">💬 声かけ例を教えて</button>
-<button type="button" onclick="useSuggestion('スクールカウンセラーへの相談メモを作成')" style="padding: 8px 16px; background: #EBF5FF; border: 1px solid #0066CC; border-radius: 20px; color: #0066CC; font-size: 13px; cursor: pointer;">🏥 SC相談メモを作成</button>
-</div>`,
-                        sources: ['まなびポケット生徒カルテ', '校務システム']
-                    };
-                } else if (lowerMessage.includes('上田') || lowerMessage.includes('亜季') || lowerMessage.includes('生徒')) {
-                    // 汎用的な上田さん検索
-                    return {
-                        text: `<strong>👩‍🎓 上田 亜季さん（6年1組27番）</strong><br><br>
-
-<div style="background: #FEF3C7; border-left: 4px solid #F59E0B; padding: 12px; border-radius: 8px; margin-bottom: 16px;">
-⚠️ <strong>注意が必要な状況</strong><br>
-直近1週間、<span style="color: #DC2626; font-weight: 600;">早退や遅刻が続いており</span>、心や体の調子が少し気になるところです。心の健康観察で「学校が楽しくない」とコメントしています。
-</div>
-
-<div style="margin-bottom: 16px;">
-<button type="button" onclick="openKarteModal()" style="display: inline-flex; align-items: center; gap: 6px; padding: 8px 16px; background: #0066CC; color: white; border-radius: 8px; border: none; font-size: 13px; font-weight: 600; cursor: pointer;">
-📂 生徒カルテを開く（まなびポケット）
-</button>
-</div>
-
-詳しく確認したい項目を選んでください：<br><br>
-
-<div style="display: flex; flex-wrap: wrap; gap: 8px;">
-<button type="button" onclick="useSuggestion('上田さんの学校生活状況を詳しく')" style="padding: 10px 20px; background: white; border: 2px solid #0066CC; border-radius: 8px; color: #0066CC; font-size: 13px; font-weight: 600; cursor: pointer; transition: all 0.2s;" onmouseover="this.style.background='#EBF5FF'" onmouseout="this.style.background='white'">🏫 学校生活状況</button>
-<button type="button" onclick="useSuggestion('上田さんの学習状況を詳しく')" style="padding: 10px 20px; background: white; border: 2px solid #0066CC; border-radius: 8px; color: #0066CC; font-size: 13px; font-weight: 600; cursor: pointer; transition: all 0.2s;" onmouseover="this.style.background='#EBF5FF'" onmouseout="this.style.background='white'">📚 学習状況</button>
-<button type="button" onclick="useSuggestion('上田さんの留意事項を詳しく')" style="padding: 10px 20px; background: white; border: 2px solid #0066CC; border-radius: 8px; color: #0066CC; font-size: 13px; font-weight: 600; cursor: pointer; transition: all 0.2s;" onmouseover="this.style.background='#EBF5FF'" onmouseout="this.style.background='white'">🔔 留意事項</button>
-</div>`,
-                        sources: ['まなびポケット生徒カルテ', '心の健康観察']
-                    };
-                } else if (lowerMessage.includes('声かけ') && lowerMessage.includes('上田')) {
-                    return {
-                        text: `<strong>💬 上田亜季さんへの声かけ例</strong><br><br>
-
-<strong>🌅 朝の声かけ（登校時）：</strong><br>
-「おはよう、亜季さん。今日も来てくれてうれしいよ。調子はどう？」<br>
-→ 登校できたこと自体を肯定的に受け止める<br><br>
-
-<strong>📚 授業中（算数で困っている時）：</strong><br>
-「この問題、国語の読解力を使うと解きやすいよ。亜季さんは文章を読み取る力がすごいから、問題文をじっくり読んでみて」<br>
-→ 得意分野（国語97点）と関連づけて自信を持たせる<br><br>
-
-<strong>😴 授業中に眠そうな時：</strong><br>
-「亜季さん、少し疲れてる？保健室で休む？それとも顔洗ってくる？」<br>
-→ 責めずに選択肢を提示。遅刻・早退が多い背景に配慮<br><br>
-
-<strong>🏆 良い行動を見つけた時：</strong><br>
-「作文コンクール大賞おめでとう！キャプテンとしても頑張ってるね。先生、亜季さんの頑張り見てるよ」<br>
-→ 具体的な成果を言葉にして承認<br><br>
-
-<strong>💚 心配な様子を感じた時：</strong><br>
-「最近どう？何か気になることがあったら、いつでも話聞くからね。放課後でも、連絡帳でもいいよ」<br>
-→ 「学校が楽しくない」というコメントに配慮し、話しやすい雰囲気を作る<br><br>
-
-<div style="background: #FEF3C7; border-left: 4px solid #F59E0B; padding: 12px; border-radius: 8px; margin-top: 16px;">
-⚠️ <strong>注意点</strong><br>
-• 小学校時代のいじめ経験があるため、友人関係（特に2組高橋さん、3組佐藤さん）には注意を払う<br>
-• ご両親が共働きで日中連絡が取りづらいため、連絡帳やアプリでの連絡を活用
-</div><br>
-
-<div style="margin-bottom: 16px;">
-<button type="button" onclick="openKarteModal()" style="display: inline-flex; align-items: center; gap: 6px; padding: 8px 16px; background: #0066CC; color: white; border-radius: 8px; border: none; font-size: 13px; font-weight: 600; cursor: pointer;">
-📂 生徒カルテを開く（まなびポケット）
-</button>
-</div>
-
-<hr style="border: none; border-top: 1px solid #E5E7EB; margin: 16px 0;">
-
-<strong>📂 他の情報も確認する：</strong><br><br>
-<div style="display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 16px;">
-<button type="button" onclick="useSuggestion('上田さんの学校生活状況を詳しく')" style="padding: 10px 20px; background: white; border: 2px solid #0066CC; border-radius: 8px; color: #0066CC; font-size: 13px; font-weight: 600; cursor: pointer; transition: all 0.2s;" onmouseover="this.style.background='#EBF5FF'" onmouseout="this.style.background='white'">🏫 学校生活状況</button>
-<button type="button" onclick="useSuggestion('上田さんの学習状況を詳しく')" style="padding: 10px 20px; background: white; border: 2px solid #0066CC; border-radius: 8px; color: #0066CC; font-size: 13px; font-weight: 600; cursor: pointer; transition: all 0.2s;" onmouseover="this.style.background='#EBF5FF'" onmouseout="this.style.background='white'">📚 学習状況</button>
-<button type="button" onclick="useSuggestion('上田さんの留意事項を詳しく')" style="padding: 10px 20px; background: white; border: 2px solid #0066CC; border-radius: 8px; color: #0066CC; font-size: 13px; font-weight: 600; cursor: pointer; transition: all 0.2s;" onmouseover="this.style.background='#EBF5FF'" onmouseout="this.style.background='white'">🔔 留意事項</button>
-</div>
-
-<strong>💡 他のアクション：</strong><br><br>
-<div style="display: flex; flex-wrap: wrap; gap: 8px;">
-<button type="button" onclick="useSuggestion('上田さんの保護者への連絡文を作成')" style="padding: 8px 16px; background: #EBF5FF; border: 1px solid #0066CC; border-radius: 20px; color: #0066CC; font-size: 13px; cursor: pointer;">📝 保護者への連絡文を作成</button>
-<button type="button" onclick="useSuggestion('スクールカウンセラーへの相談メモを作成')" style="padding: 8px 16px; background: #EBF5FF; border: 1px solid #0066CC; border-radius: 20px; color: #0066CC; font-size: 13px; cursor: pointer;">🏥 SC相談メモを作成</button>
-</div>`,
-                        sources: ['生徒指導ガイドライン', '生徒カルテ', '心の健康観察']
-                    };
-                } else if (lowerMessage.includes('保護者') && lowerMessage.includes('連絡') && lowerMessage.includes('上田')) {
-                    return {
-                        text: `<strong>📝 上田亜季さんの保護者への連絡文（案）</strong><br><br>
-
-<div style="background: white; border: 1px solid #E5E7EB; border-radius: 8px; padding: 16px;">
-<p style="margin-bottom: 8px;">上田様</p>
-<p style="margin-bottom: 8px;">いつもお世話になっております。6年1組担任の鈴木です。</p>
-<p style="margin-bottom: 8px;">亜季さんの最近の様子についてお伝えしたく、ご連絡いたしました。</p>
-<p style="margin-bottom: 8px;">まず嬉しいご報告として、作文コンクールで大賞を受賞されました。また、学習アプリ「ドリルパーク」にも熱心に取り組んでおり、学びへの意欲が感じられます。</p>
-<p style="margin-bottom: 8px;">一方で、ここ1週間ほど遅刻や早退が続いており、心の健康観察でも少し気になるコメントが見られました。体調面や学校生活で何かご心配なことがあれば、ぜひお知らせください。</p>
-<p style="margin-bottom: 8px;">お忙しいところ恐れ入りますが、お時間のある時にご連絡いただけますと幸いです。電話が難しい場合は、まなびポケットのメッセージ機能でも構いません。</p>
-<p style="margin-bottom: 8px;">今後とも亜季さんの成長を一緒に見守っていければと思います。</p>
-<p>6年1組担任 鈴木</p>
-</div><br>
-
-<strong>📋 連絡のポイント：</strong><br>
-• ポジティブな内容（作文大賞、学習意欲）を先に伝える<br>
-• 心配事は具体的に伝えつつ、責めるトーンを避ける<br>
-• ご両親が共働きのため、複数の連絡手段を提示<br><br>
-
-この文面でよろしいですか？修正点があればお伝えください。`,
-                        sources: ['生徒カルテ', '保護者連絡テンプレート']
-                    };
-                } else if (lowerMessage.includes('算数') && lowerMessage.includes('支援') && lowerMessage.includes('上田')) {
-                    return {
-                        text: `<strong>📚 上田亜季さんの算数 個別支援計画</strong><br><br>
-
-<strong>📊 現状分析：</strong><br>
-• 定期テスト：67点（クラス平均より下）<br>
-• 単元テスト推移：分数の割り算で成績が下がっている<br>
-• 授業中の様子：眠そうにしていることがある<br>
-• 強み：国語97点、読解力が高い<br><br>
-
-<strong>🎯 支援方針：</strong><br>
-<div style="background: #EBF5FF; padding: 12px; border-radius: 8px; margin-bottom: 12px;">
-<strong>読解力を活かした算数指導</strong><br>
-文章題を中心に、得意な国語力を算数に橋渡しする
-</div>
-
-<strong>📝 具体的な支援内容：</strong><br><br>
-
-<strong>1. 授業中の配慮</strong><br>
-• 座席を前方に配置し、集中しやすい環境を整える<br>
-• 文章題では「まず問題文を声に出して読んでみよう」と促す<br>
-• 眠そうな時は責めずに、軽い休憩や水分補給を許可<br><br>
-
-<strong>2. 個別課題の設定</strong><br>
-• ドリルパーク「算数/数学」基本レベルから段階的に<br>
-• 分数の計算は視覚的な図解を多用<br>
-• 1日10分程度の短時間集中型<br><br>
-
-<strong>3. 成功体験の積み重ね</strong><br>
-• 小さな進歩も具体的に褒める<br>
-• 「前回より解けるようになったね」と比較で成長を実感させる<br>
-• クラスメイトとの教え合い学習でキャプテン経験を活かす<br><br>
-
-<strong>📅 振り返りスケジュール：</strong><br>
-• 2週間後：単元テストの結果確認<br>
-• 1ヶ月後：支援計画の見直し<br><br>
-
-この計画を基に進めてよろしいですか？`,
-                        sources: ['生徒カルテ', '単元テスト結果', 'ドリルパーク学習履歴', '個別支援計画テンプレート']
-                    };
-                } else if (lowerMessage.includes('心の健康') && lowerMessage.includes('上田')) {
-                    return {
-                        text: `<strong>💚 上田亜季さんの心の健康観察 推移</strong><br><br>
-
-<div style="background: #FEF3C7; border-left: 4px solid #F59E0B; padding: 12px; border-radius: 8px; margin-bottom: 16px;">
-⚠️ <strong>直近のアラート</strong><br>
-「学校が楽しくない」とコメントしており、心の健康観察で3以上の回答が多く見られます。
-</div>
-
-<strong>📈 今年度の傾向：</strong><br>
-• 心の健康観察では3以上の回答が多い<br>
-• 欠席数も学年平均より1.8回/月少ないため、基本的には大きな問題なく学校に通っている<br>
-• ただし、保健室利用状況では3月に複数回利用しており、身体的・心理的な不調が見られる<br><br>
-
-<strong>📊 直近1週間の変化：</strong><br>
-• 早退・遅刻が続いている<br>
-• 「学校が楽しくない」というコメント<br>
-• 保健室来室あり<br><br>
-
-<strong>🔍 考えられる背景：</strong><br>
-• 小学校時代のいじめ経験の影響<br>
-• 特定の生徒（2組高橋さん、3組佐藤さん）との関係<br>
-• 算数への苦手意識による自己肯定感の低下<br>
-• 家庭環境（ご両親共働きで日中連絡がつきづらい）<br><br>
-
-<strong>💡 推奨対応：</strong><br>
-1. 本人との個別面談（放課後など落ち着いた環境で）<br>
-2. 交友関係の観察（特に休み時間、給食時間）<br>
-3. スクールカウンセラーとの連携検討<br>
-4. 保護者への状況共有<br><br>
-
-<div style="margin-bottom: 16px;">
-<button type="button" onclick="openKarteModal()" style="display: inline-flex; align-items: center; gap: 6px; padding: 8px 16px; background: #0066CC; color: white; border-radius: 8px; border: none; font-size: 13px; font-weight: 600; cursor: pointer;">
-📂 生徒カルテを開く（まなびポケット）
-</button>
-</div>
-
-<hr style="border: none; border-top: 1px solid #E5E7EB; margin: 16px 0;">
-
-<strong>📂 他の情報も確認する：</strong><br><br>
-<div style="display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 16px;">
-<button type="button" onclick="useSuggestion('上田さんの学校生活状況を詳しく')" style="padding: 10px 20px; background: white; border: 2px solid #0066CC; border-radius: 8px; color: #0066CC; font-size: 13px; font-weight: 600; cursor: pointer; transition: all 0.2s;" onmouseover="this.style.background='#EBF5FF'" onmouseout="this.style.background='white'">🏫 学校生活状況</button>
-<button type="button" onclick="useSuggestion('上田さんの学習状況を詳しく')" style="padding: 10px 20px; background: white; border: 2px solid #0066CC; border-radius: 8px; color: #0066CC; font-size: 13px; font-weight: 600; cursor: pointer; transition: all 0.2s;" onmouseover="this.style.background='#EBF5FF'" onmouseout="this.style.background='white'">📚 学習状況</button>
-<button type="button" onclick="useSuggestion('上田さんの留意事項を詳しく')" style="padding: 10px 20px; background: white; border: 2px solid #0066CC; border-radius: 8px; color: #0066CC; font-size: 13px; font-weight: 600; cursor: pointer; transition: all 0.2s;" onmouseover="this.style.background='#EBF5FF'" onmouseout="this.style.background='white'">🔔 留意事項</button>
-</div>
-
-<strong>💡 おすすめのアクション：</strong><br><br>
-<div style="display: flex; flex-wrap: wrap; gap: 8px;">
-<button type="button" onclick="useSuggestion('スクールカウンセラーへの相談メモを作成')" style="padding: 8px 16px; background: #EBF5FF; border: 1px solid #0066CC; border-radius: 20px; color: #0066CC; font-size: 13px; cursor: pointer;">🏥 SC相談メモを作成</button>
-<button type="button" onclick="useSuggestion('上田さんの保護者への連絡文を作成')" style="padding: 8px 16px; background: #EBF5FF; border: 1px solid #0066CC; border-radius: 20px; color: #0066CC; font-size: 13px; cursor: pointer;">📝 保護者への連絡文</button>
-<button type="button" onclick="useSuggestion('上田さんへの声かけ例を教えて')" style="padding: 8px 16px; background: #EBF5FF; border: 1px solid #0066CC; border-radius: 20px; color: #0066CC; font-size: 13px; cursor: pointer;">💬 声かけ例を教えて</button>
-</div>`,
-                        sources: ['心の健康観察', '生徒カルテ', '保健室利用状況']
-                    };
-                } else if (lowerMessage.includes('スクールカウンセラー') || lowerMessage.includes('SC') && lowerMessage.includes('相談')) {
-                    return {
-                        text: `<strong>🏥 スクールカウンセラー相談メモ</strong><br><br>
-
-<div style="background: white; border: 1px solid #E5E7EB; border-radius: 8px; padding: 16px;">
-<strong>相談対象：</strong>上田 亜季（6年1組27番）<br>
-<strong>相談日：</strong>____年__月__日<br>
-<strong>担任：</strong>鈴木<br><br>
-
-<strong>【相談理由】</strong><br>
-直近1週間で早退・遅刻が続いており、心の健康観察で「学校が楽しくない」とのコメントあり。本人の心理状態について専門的な視点からアドバイスをいただきたい。<br><br>
-
-<strong>【生徒の基本情報】</strong><br>
-• 学業成績：国語・理科・社会は優秀（90点台）、算数は苦手（67点）<br>
-• 部活動：料理クラブ キャプテン<br>
-• 最近の表彰：作文コンクール大賞<br>
-• 兄弟：弟（2年2組）、妹（4年1組）<br><br>
-
-<strong>【気になる点】</strong><br>
-• 小学校時代にいじめられた経験あり<br>
-• お母様より、2組高橋さん・3組佐藤さんとの関わりを注視してほしいとのご要望<br>
-• 算数の授業中に眠そうにしていることがある<br>
-• 保健室を3月に複数回利用<br>
-• ご両親が共働きで日中の連絡が取りづらい<br><br>
-
-<strong>【担任として実施したこと】</strong><br>
-• 朝の声かけを意識的に実施<br>
-• 算数の個別支援を検討中<br>
-• 保護者への連絡を予定<br><br>
-
-<strong>【ご相談したいこと】</strong><br>
-1. 本人との面談の進め方<br>
-2. いじめ経験のある生徒への配慮事項<br>
-3. 保護者との連携方法<br>
-4. クラス内での見守り体制
-</div><br>
-
-<div style="margin-bottom: 16px;">
-<button type="button" onclick="openKarteModal()" style="display: inline-flex; align-items: center; gap: 6px; padding: 8px 16px; background: #0066CC; color: white; border-radius: 8px; border: none; font-size: 13px; font-weight: 600; cursor: pointer;">
-📂 生徒カルテを開く（まなびポケット）
-</button>
-</div>
-
-<hr style="border: none; border-top: 1px solid #E5E7EB; margin: 16px 0;">
-
-<strong>📂 他の情報も確認する：</strong><br><br>
-<div style="display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 16px;">
-<button type="button" onclick="useSuggestion('上田さんの学校生活状況を詳しく')" style="padding: 10px 20px; background: white; border: 2px solid #0066CC; border-radius: 8px; color: #0066CC; font-size: 13px; font-weight: 600; cursor: pointer; transition: all 0.2s;" onmouseover="this.style.background='#EBF5FF'" onmouseout="this.style.background='white'">🏫 学校生活状況</button>
-<button type="button" onclick="useSuggestion('上田さんの学習状況を詳しく')" style="padding: 10px 20px; background: white; border: 2px solid #0066CC; border-radius: 8px; color: #0066CC; font-size: 13px; font-weight: 600; cursor: pointer; transition: all 0.2s;" onmouseover="this.style.background='#EBF5FF'" onmouseout="this.style.background='white'">📚 学習状況</button>
-<button type="button" onclick="useSuggestion('上田さんの留意事項を詳しく')" style="padding: 10px 20px; background: white; border: 2px solid #0066CC; border-radius: 8px; color: #0066CC; font-size: 13px; font-weight: 600; cursor: pointer; transition: all 0.2s;" onmouseover="this.style.background='#EBF5FF'" onmouseout="this.style.background='white'">🔔 留意事項</button>
-</div>
-
-<strong>💡 他のアクション：</strong><br><br>
-<div style="display: flex; flex-wrap: wrap; gap: 8px;">
-<button type="button" onclick="useSuggestion('上田さんの保護者への連絡文を作成')" style="padding: 8px 16px; background: #EBF5FF; border: 1px solid #0066CC; border-radius: 20px; color: #0066CC; font-size: 13px; cursor: pointer;">📝 保護者への連絡文を作成</button>
-<button type="button" onclick="useSuggestion('上田さんへの声かけ例を教えて')" style="padding: 8px 16px; background: #EBF5FF; border: 1px solid #0066CC; border-radius: 20px; color: #0066CC; font-size: 13px; cursor: pointer;">💬 声かけ例を教えて</button>
-</div><br>
-
-この内容で相談メモを作成しました。修正や追加があればお知らせください。`,
-                        sources: ['生徒カルテ', 'SC相談メモテンプレート']
-                    };
-                } else if (lowerMessage.includes('保護者') || lowerMessage.includes('資料')) {
-                    return {
-                        text: `<strong>保護者会の資料作成</strong><br><br>
-保護者会の資料作成をお手伝いします。以下の内容をベースに作成しますか？<br><br>
-
-<strong>📋 推奨構成：</strong><br>
-1. <strong>学級の様子</strong>（5分）<br>
-   • 全体の雰囲気と成長<br>
-   • 最近の取り組み<br><br>
-
-2. <strong>学習状況</strong>（10分）<br>
-   • 各教科の進捗<br>
-   • テスト結果の傾向<br>
-   • 個別支援の取り組み<br><br>
-
-3. <strong>学校行事・今後の予定</strong>（5分）<br>
-   • 修学旅行の準備状況<br>
-   • 進路説明会の日程<br><br>
-
-4. <strong>お願いとQ&A</strong>（10分）<br>
-   • 家庭での協力事項<br>
-   • 質疑応答<br><br>
-
-具体的な内容を作成しましょうか？それとも特定のセクションから始めますか？`,
-                        sources: ['学級経営データ', '年間計画']
-                    };
-                }
-            }
-            
-            if (lowerMessage.includes('導入')) {
-                return {
-                    text: `<strong>3年2組の二次関数の応用 - 導入案</strong><br><br>
-
-<strong>📺 おすすめ：大谷翔平の最新ホームラン分析</strong><br><br>
-
-昨日の試合で大谷選手が打った140m超えのホームラン。その美しい放物線を二次関数で分析してみましょう。<br><br>
-
-<strong>導入の流れ（5分）：</strong><br>
-1. 動画を見せる（1分）<br>
-2. 「この軌道、数式で表せると思う？」と問いかけ<br>
-3. 前回学んだ y = a(x-p)² + q の復習<br>
-4. 「今日はこの式を使って、実際の軌道を計算してみよう」<br><br>
-
-<strong>クラス特性を考慮した工夫：</strong><br>
-このクラスは野球好きが多く（23名が言及）、視覚的な導入に反応が良い傾向があります。前回の満足度が3.1と低めだったため、興味喚起を重視した導入がおすすめです。`,
-                    sources: ['前回授業データ', 'スポーツニュース', '単元情報']
-                };
-            } else if (lowerMessage.includes('発問')) {
-                return {
-                    text: `<strong>二次関数の応用 - 効果的な発問案3つ</strong><br><br>
-
-<strong>発問1：興味喚起（導入時）</strong><br>
-「バスケのシュート、サッカーのFK、噴水の水。これ全部、同じ数学で説明できるって知ってた？」<br>
-→ 身近な現象と数学の繋がりを意識させる<br><br>
-
-<strong>発問2：理解確認（展開時）</strong><br>
-「この式 y = -2(x-3)² + 8 を見て、頂点の座標を答えられる人？隣の人と確認してみて」<br>
-→ ペアで確認することで基礎層も安心して参加できる<br><br>
-
-<strong>発問3：思考深化（まとめ時）</strong><br>
-「もし a の値を変えたら、グラフはどう変わる？予想してから実際に確かめてみよう」<br>
-→ パラメータの意味への気づきを促す`,
-                    sources: ['前回授業データ', '単元情報', '発問理論']
-                };
-            } else if (lowerMessage.includes('宿題') || lowerMessage.includes('レベル別')) {
-                return {
-                    text: `<strong>理解レベル別の宿題設定 - 3年2組</strong><br><br>
-
-<strong>🌱 基礎層（8名）- ドリルXp P42-43</strong><br>
-• 問題数：15問（基本計算中心）<br>
-• 想定時間：20分<br><br>
-
-<strong>📚 標準層（24名）- ドリルXp P44-46</strong><br>
-• 問題数：20問（グラフ読み取り含む）<br>
-• 想定時間：25分<br><br>
-
-<strong>🚀 発展層（8名）- ドリルXp P47-48 + 応用問題</strong><br>
-• 問題数：12問（応用・融合問題）<br>
-• 想定時間：30分`,
-                    sources: ['生徒理解度データ', 'ドリルXp教材', '個別学習履歴']
-                };
-            } else if (lowerMessage.includes('様子') || lowerMessage.includes('状況')) {
-                return {
-                    text: `<strong>3年2組の最近の様子（直近3回の授業から）</strong><br><br>
-
-<strong>📊 全体傾向：</strong><br>
-• 理解度：2.9 → 3.0 → 3.3（改善傾向 ✅）<br>
-• 満足度：3.8 → 3.5 → 3.1（低下傾向 ⚠️）<br><br>
-
-<strong>💬 生徒の声から：</strong><br>
-• ポジティブ：「友達と協力して解けた」「なるほどと思えた」<br>
-• ネガティブ：「難しかった」（18回）、「わからない」（15回）`,
-                    sources: ['振り返りデータ(3回分)', 'コメント分析', '個別生徒情報']
-                };
-            } else if (lowerMessage.includes('協働') || lowerMessage.includes('グループ')) {
-                return {
-                    text: `<strong>協働学習の設計案 - 3年2組向け</strong><br><br>
-
-<strong>🎯 活動内容：「放物線チャレンジ - 最適な軌道を見つけよう」</strong><br><br>
-
-<strong>グループ編成（4人×9グループ）：</strong><br>
-基礎層1名 + 標準層2名 + 発展層1名の混合編成<br>
-→ 教え合いが自然に発生しやすい構成<br><br>
-
-<strong>活動の流れ（20分）：</strong><br>
-1. 課題提示（2分）<br>
-2. グループ討議（12分）<br>
-3. 全体共有（6分）`,
-                    sources: ['クラス特性分析', '協働学習理論', '前回授業の反応']
-                };
-            } else {
-                return {
-                    text: `理解しました。「${message}」についてお答えします。<br><br>
-
-より具体的な質問をいただければ、詳しくお答えできます。`,
-                    sources: ['クラスデータ', '単元情報']
-                };
-            }
-        }
-        
-        function loadHistory(title) {
-            if (title === '上田亜季さん') {
-                // 上田亜季さんの履歴を読み込んでチャットを開始
-                currentProject = null;
-                currentContext = null;
-                
-                chatActive = true;
-                document.getElementById('welcomeScreen').style.display = 'none';
-                document.getElementById('messagesArea').innerHTML = '';
-                document.getElementById('messageInput').value = '';
-                
-                updateHeader();
-                updateQuickPrompts();
-                
-                // ユーザーメッセージを追加
-                addMessage('user', '上田亜季さんの最近の様子を教えて');
-                
-                // AIの応答を生成
-                showTyping();
-                setTimeout(() => {
-                    hideTyping();
-                    const response = generateResponse('上田亜季さんの最近の様子');
-                    addMessage('assistant', response.text, response.sources);
-                }, 1000);
-            } else {
-                showSnackbar(`「${title}」の履歴を読み込みます（プロトタイプのため未実装）`, '📝', 3000);
-            }
-        }
-        
-        // ナレッジ共有連携モック - アイテムを開く
-        function openKnowledgeItem(fileName) {
-            // モーダルを開く
-            const modal = document.getElementById('sharepointModal');
-            const fileNameElement = document.getElementById('sharepointFileName');
-            
-            fileNameElement.textContent = fileName;
-            modal.classList.add('active');
-            
-            // 背景スクロールを防ぐ
-            document.body.style.overflow = 'hidden';
-        }
-        
-        function closeSharePointModal() {
-            const modal = document.getElementById('sharepointModal');
-            modal.classList.remove('active');
-            
-            // 背景スクロールを復元
-            document.body.style.overflow = '';
-        }
-        
-        function downloadFile() {
-            showSnackbar('指導案ファイルをダウンロードします（プロトタイプのため未実装）<br><br>実際の環境では、.docxファイルがダウンロードされます。', '💾', 3000);
-        }
-        
-        // モーダル外クリックで閉じる
-        document.addEventListener('click', function(e) {
-            const modal = document.getElementById('sharepointModal');
-            if (e.target === modal) {
-                closeSharePointModal();
-            }
-            // 生徒カルテモーダル
-            const karteModal = document.getElementById('karteModal');
-            if (e.target === karteModal) {
-                closeKarteModal();
-            }
-        });
-        
-        // ESCキーでモーダルを閉じる
-        document.addEventListener('keydown', function(e) {
-            if (e.key === 'Escape') {
-                const modal = document.getElementById('sharepointModal');
-                if (modal.classList.contains('active')) {
-                    closeSharePointModal();
-                }
-                const karteModal = document.getElementById('karteModal');
-                if (karteModal.classList.contains('active')) {
-                    closeKarteModal();
-                }
-            }
-        });
-        
-        // ナレッジ共有連携モック - 接続データ表示
-        function openDataSettings() {
-            showSnackbar(`接続データ管理画面を開きます<br><br><strong>【現在接続中】</strong><br>✅ 時間割データ<br>✅ 単元情報<br>✅ 授業振り返りデータ<br>✅ 大阪市ナレッジ共有（SharePoint）<br>✅ 最新ニュース・教育トレンド<br><br><strong>【接続可能】</strong><br>⚪ NHK for School API<br>⚪ 民間教材API<br>⚪ 心の健康観察データ<br><br>（プロトタイプのため未実装）`, '⚙️', 6000);
-        }
-        
-        // リサイズ機能
-        let isResizing = false;
-        let currentResizeTarget = null;
-        
-        document.getElementById('scheduleResizeHandle')?.addEventListener('mousedown', function(e) {
-            isResizing = true;
-            currentResizeTarget = document.getElementById('scheduleSection');
-            document.body.style.cursor = 'ns-resize';
-            document.body.style.userSelect = 'none';
-        });
-        
-        document.addEventListener('mousemove', function(e) {
-            if (!isResizing || !currentResizeTarget) return;
-            
-            const rect = currentResizeTarget.getBoundingClientRect();
-            const newHeight = e.clientY - rect.top;
-            
-            if (newHeight >= 150 && newHeight <= 500) {
-                currentResizeTarget.style.height = newHeight + 'px';
-                currentResizeTarget.style.maxHeight = newHeight + 'px';
-            }
-        });
-        
-        document.addEventListener('mouseup', function() {
-            if (isResizing) {
-                isResizing = false;
-                currentResizeTarget = null;
-                document.body.style.cursor = '';
-                document.body.style.userSelect = '';
-            }
-        });
-    </script>
+    <footer class="footer">
+        © NTT Docomo Business - まなびポケット
+    </footer>
 </body>
 </html>
