@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>まなびポケット UIモック</title>
+    <title>O市向け UIモック集</title>
     <style>
         * {
             margin: 0;
@@ -134,6 +134,14 @@
             stroke: #F97316;
         }
         
+        .card-icon.teal {
+            background: #E6FFFA;
+        }
+        
+        .card-icon.teal svg {
+            stroke: #319795;
+        }
+        
         .card-body {
             flex: 1;
         }
@@ -230,24 +238,23 @@
                         <rect x="14" y="14" width="7" height="7" rx="1"/>
                     </svg>
                 </div>
-                <h1>まなびポケット UIモック</h1>
+                <h1>O市向け UIモック集</h1>
             </div>
             <p class="header-subtitle">各機能のプロトタイプをご確認いただけます</p>
         </header>
         
         <div class="card-list">
-            <!-- ナレッジ共有・校務連携 -->
+            <!-- 先生向けAIチャット（ナレッジ共有・校務連携） -->
             <div class="card">
                 <div class="card-content">
                     <div class="card-icon">
                         <svg viewBox="0 0 24 24">
-                            <path d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/>
-                            <path d="M12 3v6a1 1 0 001 1h6"/>
+                            <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/>
                         </svg>
                     </div>
                     <div class="card-body">
-                        <h2 class="card-title">ナレッジ共有・校務連携<span class="badge">New</span></h2>
-                        <p class="card-description">生徒カルテ・校務システムと連携し、AIが先生の業務をサポート。生徒情報の確認、声かけ例の提案、保護者連絡文の作成などを支援する教師向けダッシュボード。</p>
+                        <h2 class="card-title">先生向けAIチャット（ナレッジ共有・校務連携）<span class="badge">New</span></h2>
+                        <p class="card-description">ナレッジ共有や校務支援システムの情報と連携し、先生の業務を授業支援や生徒指導等を支援するAIチャット。</p>
                         <a href="./sensei-ai.html" class="card-button">
                             デモを見る
                             <svg viewBox="0 0 24 24">
@@ -258,44 +265,24 @@
                 </div>
             </div>
             
-            <!-- 単元振り返り（児童用）- Coming Soon -->
-            <div class="card disabled">
+            <!-- ナレッジ共有モック -->
+            <div class="card">
                 <div class="card-content">
-                    <div class="card-icon green">
+                    <div class="card-icon teal">
                         <svg viewBox="0 0 24 24">
-                            <path d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253"/>
+                            <path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/>
+                            <path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/>
                         </svg>
                     </div>
                     <div class="card-body">
-                        <h2 class="card-title">単元振り返り（児童用）<span class="badge coming-soon">準備中</span></h2>
-                        <p class="card-description">理科「磁石の実験」の単元振り返りシート。児童が学習を振り返り、AIコメントを受け取る機能のデモ。</p>
-                        <span class="card-button">
+                        <h2 class="card-title">ナレッジ共有モック<span class="badge">New</span></h2>
+                        <p class="card-description">教材・指導案・研修動画など、教育現場のナレッジを一箇所で検索・共有できるポータル。AIによる自動分類・要約機能付き。</p>
+                        <a href="./knowledge-portal.html" class="card-button">
                             デモを見る
                             <svg viewBox="0 0 24 24">
                                 <path d="M5 12h14m-7-7l7 7-7 7"/>
                             </svg>
-                        </span>
-                    </div>
-                </div>
-            </div>
-            
-            <!-- 単元振り返り（先生用）- Coming Soon -->
-            <div class="card disabled">
-                <div class="card-content">
-                    <div class="card-icon purple">
-                        <svg viewBox="0 0 24 24">
-                            <path d="M4 5a1 1 0 011-1h4a1 1 0 011 1v4a1 1 0 01-1 1H5a1 1 0 01-1-1V5zm10 0a1 1 0 011-1h4a1 1 0 011 1v4a1 1 0 01-1 1h-4a1 1 0 01-1-1V5zM4 15a1 1 0 011-1h4a1 1 0 011 1v4a1 1 0 01-1 1H5a1 1 0 01-1-1v-4zm10 0a1 1 0 011-1h4a1 1 0 011 1v4a1 1 0 01-1 1h-4a1 1 0 01-1-1v-4z"/>
-                        </svg>
-                    </div>
-                    <div class="card-body">
-                        <h2 class="card-title">単元振り返り（先生用）<span class="badge coming-soon">準備中</span></h2>
-                        <p class="card-description">クラス全体の振り返り状況を確認し、生徒へコメントを送信できる教師向けダッシュボード。</p>
-                        <span class="card-button">
-                            デモを見る
-                            <svg viewBox="0 0 24 24">
-                                <path d="M5 12h14m-7-7l7 7-7 7"/>
-                            </svg>
-                        </span>
+                        </a>
                     </div>
                 </div>
             </div>

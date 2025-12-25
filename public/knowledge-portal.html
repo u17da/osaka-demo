@@ -1,0 +1,237 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>教育ナレッジポータル</title>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: 'Noto Sans JP', sans-serif; background: #f7fafc; min-height: 100vh; }
+        :root {
+            --navy: #1a365d; --navy-light: #2c5282; --sky-blue: #63b3ed; --sky-blue-light: #bee3f8;
+            --sky-blue-pale: #ebf8ff; --teal: #319795; --teal-light: #81e6d9; --white: #ffffff;
+            --gray-50: #f7fafc; --gray-100: #edf2f7; --gray-200: #e2e8f0; --gray-300: #cbd5e0;
+            --gray-400: #a0aec0; --gray-500: #718096; --gray-700: #4a5568; --gray-900: #1a202c;
+        }
+        .header { background: linear-gradient(135deg, var(--navy) 0%, var(--navy-light) 100%); position: sticky; top: 0; z-index: 100; box-shadow: 0 4px 20px rgba(26, 54, 93, 0.15); }
+        .header-inner { max-width: 1400px; margin: 0 auto; }
+        .header-top { display: flex; align-items: center; justify-content: space-between; padding: 12px 24px; border-bottom: 1px solid rgba(255,255,255,0.1); }
+        .header-logo { display: flex; align-items: center; gap: 16px; }
+        .logo-icon { width: 42px; height: 42px; background: linear-gradient(135deg, var(--teal) 0%, var(--sky-blue) 100%); border-radius: 10px; display: flex; align-items: center; justify-content: center; color: white; }
+        .logo-text h1 { font-size: 18px; font-weight: 700; color: white; }
+        .logo-text p { font-size: 11px; color: var(--sky-blue-light); }
+        .header-actions { display: flex; align-items: center; gap: 12px; }
+        .btn-post { background: var(--teal); color: white; border: none; border-radius: 8px; padding: 10px 20px; font-size: 14px; font-weight: 600; cursor: pointer; display: flex; align-items: center; gap: 6px; }
+        .user-avatar { width: 40px; height: 40px; background: rgba(255,255,255,0.15); border-radius: 50%; display: flex; align-items: center; justify-content: center; color: white; }
+        .nav { display: flex; gap: 4px; padding: 0 24px; }
+        .nav-item { background: transparent; color: white; border: none; border-radius: 8px 8px 0 0; padding: 14px 20px; font-size: 14px; font-weight: 500; cursor: pointer; display: flex; align-items: center; gap: 8px; border-bottom: 3px solid transparent; opacity: 0.85; transition: all 0.2s; }
+        .nav-item:hover { background: rgba(255,255,255,0.1); }
+        .nav-item.active { background: rgba(255,255,255,0.15); font-weight: 600; border-bottom-color: var(--teal); opacity: 1; }
+        .hero { background: linear-gradient(135deg, var(--sky-blue-pale) 0%, var(--white) 100%); padding: 48px 24px; border-bottom: 1px solid var(--gray-200); }
+        .hero-inner { max-width: 1200px; margin: 0 auto; text-align: center; }
+        .hero h2 { font-size: 28px; font-weight: 700; color: var(--navy); margin-bottom: 12px; }
+        .hero p { font-size: 15px; color: var(--gray-500); margin-bottom: 32px; }
+        .search-bar { background: white; border-radius: 16px; padding: 8px 8px 8px 24px; display: flex; align-items: center; gap: 12px; box-shadow: 0 8px 32px rgba(26, 54, 93, 0.12); border: 1px solid var(--gray-200); max-width: 720px; margin: 0 auto; }
+        .search-bar input { flex: 1; border: none; outline: none; font-size: 16px; color: var(--gray-700); background: transparent; }
+        .search-bar button { background: var(--teal); color: white; border: none; border-radius: 12px; padding: 14px 28px; font-size: 14px; font-weight: 600; cursor: pointer; display: flex; align-items: center; gap: 8px; }
+        .quick-links { display: flex; justify-content: center; gap: 16px; margin-top: 32px; flex-wrap: wrap; }
+        .quick-link { background: white; border: 2px solid var(--gray-200); border-radius: 12px; padding: 16px 24px; display: flex; align-items: center; gap: 10px; cursor: pointer; font-size: 14px; font-weight: 600; color: var(--gray-700); transition: all 0.2s; }
+        .quick-link:hover { border-color: var(--teal); box-shadow: 0 4px 12px rgba(49, 151, 149, 0.15); }
+        .main { max-width: 1200px; margin: 0 auto; padding: 32px 24px; }
+        .cards-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 24px; margin-bottom: 32px; }
+        .card { background: white; border-radius: 12px; box-shadow: 0 2px 8px rgba(26, 54, 93, 0.08); border: 1px solid var(--gray-100); overflow: hidden; }
+        .card-header { padding: 16px 20px; border-bottom: 1px solid var(--gray-100); display: flex; justify-content: space-between; align-items: center; }
+        .card-header h3 { font-size: 15px; font-weight: 700; color: var(--navy); display: flex; align-items: center; gap: 8px; }
+        .card-header a { background: transparent; border: none; color: var(--teal); font-size: 13px; cursor: pointer; display: flex; align-items: center; text-decoration: none; }
+        .card-body { padding: 12px; }
+        .card-item { padding: 12px; border-radius: 8px; cursor: pointer; display: flex; justify-content: space-between; align-items: flex-start; transition: background 0.2s; }
+        .card-item:hover { background: var(--gray-50); }
+        .card-item-title { font-size: 14px; font-weight: 500; color: var(--gray-700); margin-bottom: 4px; }
+        .card-item-date { font-size: 12px; color: var(--gray-500); }
+        .tags { display: flex; gap: 6px; flex-wrap: wrap; }
+        .tag { padding: 2px 8px; border-radius: 6px; font-size: 11px; font-weight: 600; }
+        .tag-default { background: var(--gray-100); color: var(--gray-700); }
+        .tag-navy { background: var(--sky-blue-pale); color: var(--navy); }
+        .tag-teal { background: var(--teal-light); color: var(--teal); }
+        .section-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px; }
+        .section-header h3 { font-size: 18px; font-weight: 700; color: var(--navy); display: flex; align-items: center; gap: 10px; }
+        .section-header a { color: var(--teal); font-size: 14px; font-weight: 500; text-decoration: none; display: flex; align-items: center; }
+        .videos-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 20px; }
+        .video-card { background: white; border-radius: 12px; padding: 20px; box-shadow: 0 2px 8px rgba(26, 54, 93, 0.08); border: 1px solid var(--gray-100); cursor: pointer; transition: all 0.2s; }
+        .video-card:hover { box-shadow: 0 8px 24px rgba(26, 54, 93, 0.12); transform: translateY(-2px); }
+        .video-thumbnail { background: linear-gradient(135deg, var(--sky-blue-pale) 0%, var(--gray-100) 100%); border-radius: 8px; height: 100px; display: flex; align-items: center; justify-content: center; margin-bottom: 12px; position: relative; }
+        .video-thumbnail .emoji { font-size: 36px; }
+        .video-duration { position: absolute; bottom: 8px; right: 8px; background: rgba(0,0,0,0.7); color: white; padding: 2px 6px; border-radius: 4px; font-size: 11px; }
+        .video-play { position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); background: rgba(255,255,255,0.9); border-radius: 50%; width: 40px; height: 40px; display: flex; align-items: center; justify-content: center; }
+        .video-card h4 { font-size: 14px; font-weight: 600; color: var(--gray-700); margin-top: 8px; }
+        .page { display: none; }
+        .page.active { display: block; }
+        .breadcrumb { display: flex; align-items: center; gap: 8px; padding: 16px 0; font-size: 13px; }
+        .breadcrumb a { color: var(--teal); text-decoration: none; cursor: pointer; }
+        .breadcrumb span { color: var(--gray-700); font-weight: 600; }
+        .content-grid { display: grid; grid-template-columns: 240px 1fr; gap: 24px; }
+        .filter-card { background: white; border-radius: 12px; padding: 20px; box-shadow: 0 2px 8px rgba(26, 54, 93, 0.08); border: 1px solid var(--gray-100); }
+        .filter-card h3 { font-size: 14px; font-weight: 700; color: var(--navy); margin-bottom: 16px; }
+        .filter-section { margin-bottom: 20px; }
+        .filter-section h4 { font-size: 13px; font-weight: 600; color: var(--gray-700); margin-bottom: 8px; }
+        .filter-option { display: flex; align-items: center; gap: 8px; margin-bottom: 6px; font-size: 13px; color: var(--gray-700); cursor: pointer; }
+        .filter-option input { accent-color: var(--teal); }
+        .materials-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 16px; }
+        .material-card { background: white; border-radius: 12px; padding: 20px; box-shadow: 0 2px 8px rgba(26, 54, 93, 0.08); border: 1px solid var(--gray-100); cursor: pointer; transition: all 0.2s; }
+        .material-card:hover { box-shadow: 0 8px 24px rgba(26, 54, 93, 0.12); }
+        .material-card h4 { font-size: 15px; font-weight: 600; color: var(--gray-900); margin: 10px 0 8px 0; }
+        .material-card p { font-size: 13px; color: var(--gray-500); line-height: 1.5; margin-bottom: 12px; }
+        .material-meta { display: flex; justify-content: space-between; font-size: 12px; color: var(--gray-500); }
+        .material-meta span { display: flex; align-items: center; gap: 4px; }
+        .result-count { font-size: 14px; color: var(--gray-500); margin-bottom: 16px; }
+        .result-count strong { color: var(--navy); }
+        .active-filters { display: flex; gap: 8px; margin-top: 16px; flex-wrap: wrap; }
+        .active-filter { background: var(--sky-blue-pale); color: var(--navy); padding: 6px 12px; border-radius: 20px; font-size: 13px; display: flex; align-items: center; gap: 6px; }
+        .add-filter { background: transparent; border: 1px dashed var(--gray-300); color: var(--gray-500); padding: 6px 12px; border-radius: 20px; font-size: 13px; cursor: pointer; display: flex; align-items: center; gap: 4px; }
+    </style>
+</head>
+<body>
+    <header class="header">
+        <div class="header-inner">
+            <div class="header-top">
+                <div class="header-logo">
+                    <div class="logo-icon"><i data-lucide="book-open" style="width: 24px; height: 24px;"></i></div>
+                    <div class="logo-text"><h1>教育ナレッジポータル</h1><p>○○市教育委員会</p></div>
+                </div>
+                <div class="header-actions">
+                    <button class="btn-post"><i data-lucide="plus" style="width: 18px; height: 18px;"></i>投稿する</button>
+                    <div class="user-avatar"><i data-lucide="user" style="width: 20px; height: 20px;"></i></div>
+                </div>
+            </div>
+            <nav class="nav">
+                <button class="nav-item active" onclick="showPage('home')" id="nav-home"><i data-lucide="home" style="width: 18px; height: 18px;"></i>ホーム</button>
+                <button class="nav-item" onclick="showPage('materials')" id="nav-materials"><i data-lucide="book-open" style="width: 18px; height: 18px;"></i>教材・指導案</button>
+                <button class="nav-item" onclick="showPage('training')" id="nav-training"><i data-lucide="video" style="width: 18px; height: 18px;"></i>研修</button>
+                <button class="nav-item" onclick="showPage('ict')" id="nav-ict"><i data-lucide="monitor" style="width: 18px; height: 18px;"></i>マニュアル/FAQ</button>
+            </nav>
+        </div>
+    </header>
+    <div id="page-home" class="page active">
+        <section class="hero">
+            <div class="hero-inner">
+                <h2>教育現場のナレッジを、すぐに見つける</h2>
+                <p>教材・指導案・研修動画など、授業に役立つ情報を一箇所で</p>
+                <div class="search-bar">
+                    <i data-lucide="search" style="width: 24px; height: 24px; color: #718096;"></i>
+                    <input type="text" placeholder="キーワードで検索... 例：「中2 理科 密度 ワークシート」">
+                    <button><i data-lucide="search" style="width: 18px; height: 18px;"></i>検索</button>
+                </div>
+                <div class="quick-links">
+                    <button class="quick-link" onclick="showPage('materials')"><i data-lucide="book-open" style="width: 20px; height: 20px; color: #1a365d;"></i>教材・指導案を探す</button>
+                    <button class="quick-link" onclick="showPage('training')"><i data-lucide="video" style="width: 20px; height: 20px; color: #2c5282;"></i>研修動画</button>
+                    <button class="quick-link" onclick="showPage('ict')"><i data-lucide="monitor" style="width: 20px; height: 20px; color: #63b3ed;"></i>マニュアル/FAQ</button>
+                </div>
+            </div>
+        </section>
+        <main class="main">
+            <div class="cards-grid">
+                <div class="card">
+                    <div class="card-header"><h3><i data-lucide="book-open" style="width: 18px; height: 18px; color: #319795;"></i>新着教材・指導案</h3><a href="#" onclick="showPage('materials'); return false;">すべて見る <i data-lucide="chevron-right" style="width: 16px; height: 16px;"></i></a></div>
+                    <div class="card-body">
+                        <div class="card-item"><div><div class="card-item-title">密度の計算ワークシート</div><div class="tags"><span class="tag tag-navy">理科</span><span class="tag tag-default">中2</span></div></div><span class="card-item-date">12/14</span></div>
+                        <div class="card-item"><div><div class="card-item-title">分数の足し算導入スライド</div><div class="tags"><span class="tag tag-navy">算数</span><span class="tag tag-default">小4</span></div></div><span class="card-item-date">12/13</span></div>
+                        <div class="card-item"><div><div class="card-item-title">プログラミング基礎</div><div class="tags"><span class="tag tag-navy">情報</span><span class="tag tag-default">高1</span></div></div><span class="card-item-date">12/12</span></div>
+                        <div class="card-item"><div><div class="card-item-title">漢字練習プリント（3年生）</div><div class="tags"><span class="tag tag-navy">国語</span><span class="tag tag-default">小3</span></div></div><span class="card-item-date">12/11</span></div>
+                    </div>
+                </div>
+                <div class="card">
+                    <div class="card-header"><h3><i data-lucide="video" style="width: 18px; height: 18px; color: #2c5282;"></i>新着研修動画</h3><a href="#" onclick="showPage('training'); return false;">すべて見る <i data-lucide="chevron-right" style="width: 16px; height: 16px;"></i></a></div>
+                    <div class="card-body">
+                        <div class="card-item"><div><div class="card-item-title">ICT活用授業の基本</div><div class="tags"><span class="tag tag-navy">ICT活用</span><span class="tag tag-default">15:30</span></div></div><span class="card-item-date">12/14</span></div>
+                        <div class="card-item"><div><div class="card-item-title">生徒指導の初期対応</div><div class="tags"><span class="tag tag-navy">生徒指導</span><span class="tag tag-default">22:45</span></div></div><span class="card-item-date">12/13</span></div>
+                        <div class="card-item"><div><div class="card-item-title">アクティブラーニング実践</div><div class="tags"><span class="tag tag-navy">授業改善</span><span class="tag tag-default">18:20</span></div></div><span class="card-item-date">12/12</span></div>
+                        <div class="card-item"><div><div class="card-item-title">特別支援教育の基礎</div><div class="tags"><span class="tag tag-navy">特別支援</span><span class="tag tag-default">25:10</span></div></div><span class="card-item-date">12/11</span></div>
+                    </div>
+                </div>
+            </div>
+            <section>
+                <div class="section-header"><h3><i data-lucide="video" style="width: 22px; height: 22px; color: #2c5282;"></i>研修動画ピックアップ</h3><a href="#" onclick="showPage('training'); return false;">すべて見る <i data-lucide="chevron-right" style="width: 18px; height: 18px;"></i></a></div>
+                <div class="videos-grid">
+                    <div class="video-card" onclick="showPage('training')"><div class="video-thumbnail"><span class="emoji">🖥️</span><span class="video-duration">15:30</span><div class="video-play"><i data-lucide="play" style="width: 20px; height: 20px; color: #1a365d;"></i></div></div><span class="tag tag-navy">ICT活用</span><h4>ICT活用授業の基本</h4></div>
+                    <div class="video-card" onclick="showPage('training')"><div class="video-thumbnail"><span class="emoji">👥</span><span class="video-duration">22:45</span><div class="video-play"><i data-lucide="play" style="width: 20px; height: 20px; color: #1a365d;"></i></div></div><span class="tag tag-navy">生徒指導</span><h4>生徒指導の初期対応</h4></div>
+                    <div class="video-card" onclick="showPage('training')"><div class="video-thumbnail"><span class="emoji">💡</span><span class="video-duration">18:20</span><div class="video-play"><i data-lucide="play" style="width: 20px; height: 20px; color: #1a365d;"></i></div></div><span class="tag tag-navy">授業改善</span><h4>アクティブラーニング実践</h4></div>
+                    <div class="video-card" onclick="showPage('training')"><div class="video-thumbnail"><span class="emoji">🌈</span><span class="video-duration">25:10</span><div class="video-play"><i data-lucide="play" style="width: 20px; height: 20px; color: #1a365d;"></i></div></div><span class="tag tag-navy">特別支援</span><h4>特別支援教育の基礎</h4></div>
+                </div>
+            </section>
+        </main>
+    </div>
+    <div id="page-materials" class="page">
+        <main class="main">
+            <nav class="breadcrumb"><a onclick="showPage('home')">ホーム</a><i data-lucide="chevron-right" style="width: 14px; height: 14px; color: #718096;"></i><span>教材・指導案一覧</span></nav>
+            <div style="margin-bottom: 24px;">
+                <div class="search-bar" style="max-width: 100%; border-radius: 12px; padding: 6px 6px 6px 16px;"><i data-lucide="search" style="width: 20px; height: 20px; color: #718096;"></i><input type="text" placeholder="教材・指導案を検索..."><button style="border-radius: 8px; padding: 10px 20px;"><i data-lucide="search" style="width: 18px; height: 18px;"></i>検索</button></div>
+                <div class="active-filters"><span class="active-filter">校種: 中学校 <i data-lucide="x" style="width: 14px; height: 14px; cursor: pointer;"></i></span><span class="active-filter">教科: 理科 <i data-lucide="x" style="width: 14px; height: 14px; cursor: pointer;"></i></span><button class="add-filter"><i data-lucide="filter" style="width: 14px; height: 14px;"></i> フィルタを追加</button></div>
+            </div>
+            <div class="content-grid">
+                <div class="filter-card">
+                    <h3>絞り込み</h3>
+                    <div class="filter-section"><h4>校種</h4><label class="filter-option"><input type="checkbox"> 小学校</label><label class="filter-option"><input type="checkbox" checked> 中学校</label><label class="filter-option"><input type="checkbox"> 高等学校</label></div>
+                    <div class="filter-section"><h4>教科</h4><label class="filter-option"><input type="checkbox"> 国語</label><label class="filter-option"><input type="checkbox"> 算数・数学</label><label class="filter-option"><input type="checkbox" checked> 理科</label><label class="filter-option"><input type="checkbox"> 社会</label></div>
+                    <div class="filter-section"><h4>種別</h4><label class="filter-option"><input type="checkbox"> ワークシート</label><label class="filter-option"><input type="checkbox"> 指導案</label><label class="filter-option"><input type="checkbox"> スライド</label></div>
+                </div>
+                <div>
+                    <p class="result-count"><strong>128件</strong> の教材・指導案が見つかりました</p>
+                    <div class="materials-grid">
+                        <div class="material-card"><div class="tags"><span class="tag tag-navy">理科</span><span class="tag tag-default">中2</span><span class="tag tag-teal">ワークシート</span></div><h4>密度の計算ワークシート</h4><p>密度の公式を使った基本的な計算問題。</p><div class="material-meta"><span><i data-lucide="building" style="width: 14px; height: 14px;"></i> ○○中学校</span><span><i data-lucide="calendar" style="width: 14px; height: 14px;"></i> 2024/12/14</span></div></div>
+                        <div class="material-card"><div class="tags"><span class="tag tag-navy">理科</span><span class="tag tag-default">中2</span><span class="tag tag-teal">指導案</span></div><h4>電流と電圧の関係 指導案</h4><p>オームの法則を導入する単元の指導案。</p><div class="material-meta"><span><i data-lucide="building" style="width: 14px; height: 14px;"></i> △△中学校</span><span><i data-lucide="calendar" style="width: 14px; height: 14px;"></i> 2024/12/13</span></div></div>
+                        <div class="material-card"><div class="tags"><span class="tag tag-navy">理科</span><span class="tag tag-default">中2</span><span class="tag tag-teal">スライド</span></div><h4>化学変化のまとめスライド</h4><p>化学変化の単元全体をまとめた復習用スライド。</p><div class="material-meta"><span><i data-lucide="building" style="width: 14px; height: 14px;"></i> □□中学校</span><span><i data-lucide="calendar" style="width: 14px; height: 14px;"></i> 2024/12/12</span></div></div>
+                        <div class="material-card"><div class="tags"><span class="tag tag-navy">理科</span><span class="tag tag-default">中1</span><span class="tag tag-teal">ワークシート</span></div><h4>地層の観察ワークシート</h4><p>野外観察時に使用するワークシート。</p><div class="material-meta"><span><i data-lucide="building" style="width: 14px; height: 14px;"></i> ◇◇中学校</span><span><i data-lucide="calendar" style="width: 14px; height: 14px;"></i> 2024/12/11</span></div></div>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+    <div id="page-training" class="page">
+        <main class="main">
+            <nav class="breadcrumb"><a onclick="showPage('home')">ホーム</a><i data-lucide="chevron-right" style="width: 14px; height: 14px; color: #718096;"></i><span>研修動画</span></nav>
+            <h1 style="font-size: 24px; font-weight: 700; color: #1a365d; margin-bottom: 24px;">研修動画カタログ</h1>
+            <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 24px;">
+                <div class="video-card"><div class="video-thumbnail" style="height: 140px;"><span class="emoji" style="font-size: 48px;">🖥️</span><span class="video-duration">15:30</span><div class="video-play" style="width: 48px; height: 48px;"><i data-lucide="play" style="width: 24px; height: 24px; color: #1a365d;"></i></div></div><div class="tags" style="margin-bottom: 10px;"><span class="tag tag-navy">ICT活用</span><span class="tag tag-default">全教職員</span></div><h3 style="font-size: 16px; font-weight: 600; color: #1a202c; margin-bottom: 8px;">ICT活用授業の基本</h3><p style="font-size: 13px; color: #718096;">タブレットを活用した効果的な授業づくり</p></div>
+                <div class="video-card"><div class="video-thumbnail" style="height: 140px;"><span class="emoji" style="font-size: 48px;">👥</span><span class="video-duration">22:45</span><div class="video-play" style="width: 48px; height: 48px;"><i data-lucide="play" style="width: 24px; height: 24px; color: #1a365d;"></i></div></div><div class="tags" style="margin-bottom: 10px;"><span class="tag tag-navy">生徒指導</span><span class="tag tag-default">全教職員</span></div><h3 style="font-size: 16px; font-weight: 600; color: #1a202c; margin-bottom: 8px;">生徒指導の初期対応</h3><p style="font-size: 13px; color: #718096;">問題行動の早期発見と初期対応のポイント</p></div>
+                <div class="video-card"><div class="video-thumbnail" style="height: 140px;"><span class="emoji" style="font-size: 48px;">💡</span><span class="video-duration">18:20</span><div class="video-play" style="width: 48px; height: 48px;"><i data-lucide="play" style="width: 24px; height: 24px; color: #1a365d;"></i></div></div><div class="tags" style="margin-bottom: 10px;"><span class="tag tag-navy">授業改善</span><span class="tag tag-default">中堅教諭</span></div><h3 style="font-size: 16px; font-weight: 600; color: #1a202c; margin-bottom: 8px;">アクティブラーニング実践</h3><p style="font-size: 13px; color: #718096;">主体的・対話的で深い学びを実現する授業設計</p></div>
+                <div class="video-card"><div class="video-thumbnail" style="height: 140px;"><span class="emoji" style="font-size: 48px;">🌈</span><span class="video-duration">25:10</span><div class="video-play" style="width: 48px; height: 48px;"><i data-lucide="play" style="width: 24px; height: 24px; color: #1a365d;"></i></div></div><div class="tags" style="margin-bottom: 10px;"><span class="tag tag-navy">特別支援</span><span class="tag tag-default">全教職員</span></div><h3 style="font-size: 16px; font-weight: 600; color: #1a202c; margin-bottom: 8px;">特別支援教育の基礎</h3><p style="font-size: 13px; color: #718096;">通常学級での合理的配慮と個別の指導計画</p></div>
+                <div class="video-card"><div class="video-thumbnail" style="height: 140px;"><span class="emoji" style="font-size: 48px;">📚</span><span class="video-duration">20:00</span><div class="video-play" style="width: 48px; height: 48px;"><i data-lucide="play" style="width: 24px; height: 24px; color: #1a365d;"></i></div></div><div class="tags" style="margin-bottom: 10px;"><span class="tag tag-navy">学級経営</span><span class="tag tag-default">初任者</span></div><h3 style="font-size: 16px; font-weight: 600; color: #1a202c; margin-bottom: 8px;">学級経営の年間計画</h3><p style="font-size: 13px; color: #718096;">4月から3月までの見通しを持った学級づくり</p></div>
+                <div class="video-card"><div class="video-thumbnail" style="height: 140px;"><span class="emoji" style="font-size: 48px;">☁️</span><span class="video-duration">30:15</span><div class="video-play" style="width: 48px; height: 48px;"><i data-lucide="play" style="width: 24px; height: 24px; color: #1a365d;"></i></div></div><div class="tags" style="margin-bottom: 10px;"><span class="tag tag-navy">ICT活用</span><span class="tag tag-default">全教職員</span></div><h3 style="font-size: 16px; font-weight: 600; color: #1a202c; margin-bottom: 8px;">Google Workspace活用</h3><p style="font-size: 13px; color: #718096;">Classroom、Forms、Driveの効果的な使い方</p></div>
+            </div>
+        </main>
+    </div>
+    <div id="page-ict" class="page">
+        <main class="main">
+            <nav class="breadcrumb"><a onclick="showPage('home')">ホーム</a><i data-lucide="chevron-right" style="width: 14px; height: 14px; color: #718096;"></i><span>マニュアル/FAQ</span></nav>
+            <h1 style="font-size: 24px; font-weight: 700; color: #1a365d; margin-bottom: 8px;">マニュアル/FAQ</h1>
+            <p style="font-size: 14px; color: #718096; margin-bottom: 24px;">端末やサービスの使い方・トラブル解決方法を検索できます</p>
+            <div style="margin-bottom: 32px;"><div class="search-bar"><i data-lucide="search" style="width: 24px; height: 24px; color: #718096;"></i><input type="text" placeholder="例：「Teams ログインできない」「Wi-Fi 接続方法」"><button><i data-lucide="search" style="width: 18px; height: 18px;"></i>検索</button></div></div>
+            <div class="content-grid">
+                <div class="filter-card"><h3>カテゴリ</h3><div style="display: flex; flex-direction: column; gap: 4px;"><div style="display: flex; justify-content: space-between; padding: 10px 12px; border-radius: 8px; cursor: pointer; font-size: 14px; color: #4a5568;"><span>💻 タブレット端末</span><span style="font-size: 12px; color: #a0aec0;">24</span></div><div style="display: flex; justify-content: space-between; padding: 10px 12px; border-radius: 8px; cursor: pointer; font-size: 14px; color: #4a5568;"><span>☁️ Google Workspace</span><span style="font-size: 12px; color: #a0aec0;">18</span></div><div style="display: flex; justify-content: space-between; padding: 10px 12px; border-radius: 8px; cursor: pointer; font-size: 14px; color: #4a5568;"><span>📺 Microsoft 365</span><span style="font-size: 12px; color: #a0aec0;">15</span></div><div style="display: flex; justify-content: space-between; padding: 10px 12px; border-radius: 8px; cursor: pointer; font-size: 14px; color: #4a5568;"><span>📡 ネットワーク</span><span style="font-size: 12px; color: #a0aec0;">12</span></div><div style="display: flex; justify-content: space-between; padding: 10px 12px; border-radius: 8px; cursor: pointer; font-size: 14px; color: #4a5568;"><span>🖨️ プリンター</span><span style="font-size: 12px; color: #a0aec0;">8</span></div></div></div>
+                <div>
+                    <div class="card" style="margin-bottom: 24px;"><div style="background: linear-gradient(135deg, #ebf8ff 0%, #ffffff 100%); padding: 20px; border-radius: 12px 12px 0 0; border-bottom: 1px solid #e2e8f0;"><div style="display: flex; align-items: center; gap: 12px;"><div style="background: #319795; color: white; padding: 6px 12px; border-radius: 6px; font-size: 12px; font-weight: 700;">NEW</div><h3 style="font-size: 16px; font-weight: 700; color: #1a365d;">GIGAスクール端末 令和6年度版 操作マニュアル</h3></div><p style="font-size: 14px; color: #718096; margin: 12px 0 0 0;">最新のOS更新に対応した操作マニュアルです。</p><div style="display: flex; gap: 12px; margin-top: 16px;"><button style="background: #319795; color: white; border: none; border-radius: 8px; padding: 10px 20px; font-size: 14px; font-weight: 600; cursor: pointer; display: flex; align-items: center; gap: 6px;"><i data-lucide="eye" style="width: 16px; height: 16px;"></i>マニュアルを見る</button><button style="background: white; color: #4a5568; border: 1px solid #e2e8f0; border-radius: 8px; padding: 10px 20px; font-size: 14px; cursor: pointer; display: flex; align-items: center; gap: 6px;"><i data-lucide="download" style="width: 16px; height: 16px;"></i>PDF版</button></div></div></div>
+                    <h3 style="font-size: 16px; font-weight: 700; color: #1a365d; margin-bottom: 16px;">よくある質問（FAQ）</h3>
+                    <div style="display: flex; flex-direction: column; gap: 12px;">
+                        <div class="card" style="padding: 16px;"><div style="display: flex; align-items: center; justify-content: space-between;"><div style="display: flex; align-items: center; gap: 12px;"><i data-lucide="help-circle" style="width: 20px; height: 20px; color: #319795;"></i><div><p style="font-size: 15px; font-weight: 500; color: #1a202c; margin: 0 0 6px 0;">Teams にログインできない</p><span class="tag tag-default">Microsoft 365</span></div></div><div style="display: flex; align-items: center; gap: 16px;"><span style="font-size: 12px; color: #a0aec0;">1,234 views</span><i data-lucide="chevron-right" style="width: 20px; height: 20px; color: #a0aec0;"></i></div></div></div>
+                        <div class="card" style="padding: 16px;"><div style="display: flex; align-items: center; justify-content: space-between;"><div style="display: flex; align-items: center; gap: 12px;"><i data-lucide="help-circle" style="width: 20px; height: 20px; color: #319795;"></i><div><p style="font-size: 15px; font-weight: 500; color: #1a202c; margin: 0 0 6px 0;">Wi-Fi に接続できない</p><span class="tag tag-default">ネットワーク</span></div></div><div style="display: flex; align-items: center; gap: 16px;"><span style="font-size: 12px; color: #a0aec0;">987 views</span><i data-lucide="chevron-right" style="width: 20px; height: 20px; color: #a0aec0;"></i></div></div></div>
+                        <div class="card" style="padding: 16px;"><div style="display: flex; align-items: center; justify-content: space-between;"><div style="display: flex; align-items: center; gap: 12px;"><i data-lucide="help-circle" style="width: 20px; height: 20px; color: #319795;"></i><div><p style="font-size: 15px; font-weight: 500; color: #1a202c; margin: 0 0 6px 0;">パスワードを忘れた</p><span class="tag tag-default">セキュリティ</span></div></div><div style="display: flex; align-items: center; gap: 16px;"><span style="font-size: 12px; color: #a0aec0;">876 views</span><i data-lucide="chevron-right" style="width: 20px; height: 20px; color: #a0aec0;"></i></div></div></div>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+    <script>
+        function showPage(pageId) {
+            document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+            document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
+            document.getElementById('page-' + pageId).classList.add('active');
+            const navItem = document.getElementById('nav-' + pageId);
+            if (navItem) navItem.classList.add('active');
+            window.scrollTo(0, 0);
+        }
+        lucide.createIcons();
+    </script>
+</body>
+</html>

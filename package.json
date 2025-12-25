@@ -1,7 +1,7 @@
 {
-  "name": "sensei-ai-prototype",
+  "name": "osaka-ui-mock",
   "version": "1.0.0",
-  "description": "先生向けAIアシスタント プロトタイプ - まなびポケット連携デモ",
+  "description": "まなびポケット UIモック - 大阪市向けプロトタイプデモ環境",
   "scripts": {
     "start": "npx serve public",
     "dev": "npx serve public -l 3000"
@@ -11,7 +11,8 @@
     "ai",
     "teacher",
     "assistant",
-    "prototype"
+    "prototype",
+    "manabi-pocket"
   ],
   "author": "",
   "license": "MIT",
